@@ -1,8 +1,20 @@
 #include <Geode/Geode.hpp>
+#include <Geode/modify/MenuLayer.hpp>
 
 using namespace geode::prelude;
 
-#include <Geode/modify/MenuLayer.hpp>
+$on_mod(Loaded) {
+	BrainrotRegistry::brainrots = {
+		{"tralalelo_tralala", "tralalelo.png"_spr},
+		{"tung_tung_sahur", "tung_sahur.png"_spr},
+		{"bombardino_crocodilo", "bombardino.png"_spr},
+		{"chimpanzini_bananini", "chimpanzini.png"_spr},
+		{"lirili_larila", "lirili.png"_spr},
+		{"cappuccino_assassino", "cappuccino.png"_spr},
+		{"ballerina_cappuccina", "ballerina.png"_spr}
+	};
+}
+
 class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
 		if (!MenuLayer::init()) {
