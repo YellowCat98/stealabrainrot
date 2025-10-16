@@ -7,13 +7,11 @@ struct BrainrotRegistry {
     static std::vector<Brainrot*> earnedBrainrots;
 };
 
-class Brainrot : public cocos2d::CCNode {
+class Brainrot : public cocos2d::CCSprite {
 private:
-    cocos2d::CCSprite* brainrotImage;
     std::string brainrotID;
-    bool init(cocos2d::CCSprite* brainrotImage, const std::string& brainrotID);
+    bool init(const std::string& brainrotID);
 public:
-    static Brainrot* create(cocos2d::CCSprite* brainrotImage, const std::string& brainrotID);
+    static Brainrot* create(const std::string& brainrotID);
     void allowWander(bool toggle); // brainrots can wander around the screen if this is enabled, if not, they remain in a random position
-    cocos2d::CCSprite* getSprite(); // im too lazy to move brainrotImage to public
 };
