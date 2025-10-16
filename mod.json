@@ -1,0 +1,17 @@
+{
+	"geode": "4.9.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "yellowcat98.have_you_ever_stole_a_brainrot",
+	"name": "Steal a Brainrot",
+	"version": "v1.0.0",
+	"developer": "YellowCat98",
+	"description": "STEAL a brainrot",
+	"dependencies": {
+		"geode.node-ids": ">=v1.20.0"
+	}
+}
