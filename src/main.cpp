@@ -1,10 +1,11 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/MenuLayer.hpp>
+#include <StealaBrainrot.hpp>
 
 using namespace geode::prelude;
 
 $on_mod(Loaded) {
-	BrainrotRegistry::brainrots = {
+	BrainrotRegistry::get()->brainrots = {
 		{"tralalelo_tralala", "tralalelo.png"_spr},
 		{"tung_tung_sahur", "tung_sahur.png"_spr},
 		{"bombardino_crocodilo", "bombardino.png"_spr},
@@ -17,24 +18,15 @@ $on_mod(Loaded) {
 
 class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
-		if (!MenuLayer::init()) {
-			return false;
+		if (!MenuLayer::init()) return false;
+		
+		static Brainrot* brainrot;
+		if (!brainrot) {
+			brainrot = Brainrot::create("h");
+			brainrot->allowWander(true);
+			SceneManager::get()->keepAcrossScenes(brainrot);
 		}
-
-		log::debug("Hello from my MenuLayer::init hook! This layer has {} children.", this->getChildrenCount());
-
-		auto myButton = CCMenuItemSpriteExtra::create(
-			CCSprite::createWithSpriteFrameName("GJ_likeBtn_001.png"),
-			this,
-			menu_selector(MyMenuLayer::onMyButton)
-		);
-
-		auto menu = this->getChildByID("bottom-menu");
-		menu->addChild(myButton);
-
-		myButton->setID("my-button"_spr);
-
-		menu->updateLayout();
+		
 
 		return true;
 	}
