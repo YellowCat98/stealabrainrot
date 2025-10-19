@@ -127,6 +127,8 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     void resetLevel() {
         PlayLayer::resetLevel();
+        for (const auto [k, v] : m_fields->m_collected) v->setVisible(true);
+        
         m_fields->m_collected.clear(); // while yes brainrots can spawn even if you die, you always still have to beat the level in order for the brainrot to save!
     }
 };
