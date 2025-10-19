@@ -52,14 +52,14 @@ class $modify(InsertBrainrot, PlayLayer) {
             this->m_objectLayer->addChild(spr);
 
             auto theChosenOne = utilities::random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
-            auto currentSavedValue = Mod::get()->getSavedValue<std::unordered_map<std::string, std::vector<std::map<std::string, std::string>>>>("brainrots-to-show");
-            currentSavedValue[fmt::to_string(m_level->m_levelID.value())].push_back({
+
+            SaveManager::get()->getCurrentSave(); // push current save into memory
+            SaveManager::get()->pushChanges(fmt::to_string(m_level->m_levelID), {
                 {"id", theChosenOne},
                 {"x", fmt::to_string(pos.x)},
                 {"y", fmt::to_string(pos.y)}
             });
-            //currentSavedValue.insert({fmt::to_string(m_level->m_levelID.value()), vec});
-            Mod::get()->setSavedValue<std::unordered_map<std::string, std::vector<std::map<std::string, std::string>>>>("brainrots-to-show", currentSavedValue);
+            SaveManager::get()->commitChanges();
         }
     }
 };
