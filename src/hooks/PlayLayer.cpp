@@ -37,8 +37,9 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     bool brainrotCollection(std::vector<SaveManager::MapData> brainrots) {
         for (auto& brainrot : brainrots) {
+
             // so uh theres no BrainrotCollectible it'll just be a ccsprite and playlayer detects when m_player1 or m_player 2 touch it
-            auto sprite = CCSprite::create("GJ_button_01.png");
+            auto sprite = CCSprite::create(BrainrotRegistry::get()->brainrots[brainrot["id"]].c_str());
             auto x = numFromString<float>(brainrot["x"]);
             auto y = numFromString<float>(brainrot["y"]);
             if (x.isErr()) {
