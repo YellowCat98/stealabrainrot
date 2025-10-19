@@ -16,7 +16,6 @@ bool Brainrot::init(const std::string& brainrotID) {
         texture->getContentSize().height
     ));
 
-    this->setScale(1.3f);
     this->setAnchorPoint({0.0f, 1.0f});
 
     speed = 100.0f;
