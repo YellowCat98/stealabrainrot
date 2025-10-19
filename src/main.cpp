@@ -13,6 +13,6 @@ $on_mod(Loaded) {
 		{"lirili_larila", "lirili.png"_spr},
 		{"cappuccino_assassino", "cappuccino.png"_spr}, 
 		{"ballerina_cappuccina", "ballerina.png"_spr},
-		{"trippi_troppi", "trippi.png"_spr} 
+		{"trippi_troppi", "trippi.png"_spr}
 	};
 }
