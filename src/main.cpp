@@ -15,23 +15,3 @@ $on_mod(Loaded) {
 		{"ballerina_cappuccina", "ballerina.png"_spr}
 	};
 }
-
-class $modify(MyMenuLayer, MenuLayer) {
-	bool init() {
-		if (!MenuLayer::init()) return false;
-		
-		static Brainrot* brainrot;
-		if (!brainrot) {
-			brainrot = Brainrot::create("h");
-			brainrot->allowWander(true);
-			SceneManager::get()->keepAcrossScenes(brainrot);
-		}
-		
-
-		return true;
-	}
-
-	void onMyButton(CCObject*) {
-		FLAlertLayer::create("Geode", "Hello from my custom mod!", "OK")->show();
-	}
-};
