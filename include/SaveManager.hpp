@@ -7,18 +7,20 @@
 class SaveManager {
 public:
 
-    using ComplexMap = std::unordered_map<
-        std::string, std::vector<std::map<std::string, std::string>>
-    >;
 
     using MapData = std::map<std::string, std::string>;
+    using ComplexMap = std::unordered_map<
+        std::string, std::vector<MapData>
+    >;
 
     static SaveManager* get();
     void getCurrentSave();
     void commitChanges();
     void pushChanges(std::string levelID, MapData map);
-private:
     ComplexMap uncommitted;
+    std::vector<MapData> brainrotInLevel(std::string levelID); // returns {} if there's no brainrots
+private:
+    
 
     bool getCurrentSaveCalled;
 };

@@ -14,16 +14,36 @@ class $modify(InsertBrainrot, PlayLayer) {
         float m_whenToPlace; // this determines where to place the brainrot.
         bool m_triggered;
         float m_elapsed;
+        bool m_assignBrainrot; // when this is true, the mod will create brainrots, if not it would be called collection mode, collects brainrots!
     };
 
     bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
         if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 
         if (level->m_stars == 0) return true;
+
+        SaveManager::get()->getCurrentSave();
+        log::info("{}", SaveManager::get()->uncommitted);
+        auto brianrots = SaveManager::get()->brainrotInLevel(fmt::to_string(level->m_levelID.value()));
+        log::info("{}", brianrots);
         
-        int category = level->m_levelLength;
+        if (brianrots.empty()) {
+            m_fields->m_assignBrainrot = true;
+            return brainrotAssignment();
+        }
+
+        m_fields->m_assignBrainrot = false;
+
+        return brainrotCollection();
+    }
+
+    bool brainrotCollection() {
+        return true;
+    }
+
+    bool brainrotAssignment() {
+        int category = m_level->m_levelLength;
         float duration = 0.0f;
-        log::info("category: {}", category);
         if (category == 0) return true; // brainrots cannot be collected on tiny or short levels.
         else if (category == 1) return true;
         else if (category == 2) duration = 30.0f;
@@ -32,14 +52,18 @@ class $modify(InsertBrainrot, PlayLayer) {
 
         m_fields->m_whenToPlace = 10.0f + utilities::random::random(0.0f, 1.0f) * (duration - 10.0f);
 
-        log::info("{}", m_fields->m_whenToPlace);
-
         return true;
     }
 
     void postUpdate(float dt) {
         PlayLayer::postUpdate(dt);
-        
+        if (m_fields->m_assignBrainrot) return brainrotAssignmentUpdate(dt);
+
+        brainrotCollectionUpdate();
+    }
+
+    // this is the code that runs every frame if on assignment mode
+    void brainrotAssignmentUpdate(float dt) {
         if (m_fields->m_triggered) return;
 
         m_fields->m_elapsed += dt;
@@ -61,5 +85,10 @@ class $modify(InsertBrainrot, PlayLayer) {
             });
             SaveManager::get()->commitChanges();
         }
+    }
+
+    // this is the code that runs every frame if on collection mode
+    void brainrotCollectionUpdate() {
+        log::info("toilette great");
     }
 };

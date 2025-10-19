@@ -21,4 +21,12 @@ void SaveManager::pushChanges(std::string levelID, MapData map) {
 void SaveManager::commitChanges() {
     Mod::get()->setSavedValue<ComplexMap>("brainrots-to-show", this->uncommitted);
     this->uncommitted.clear();
+    this->getCurrentSaveCalled = false;
+}
+
+std::vector<SaveManager::MapData> SaveManager::brainrotInLevel(std::string levelID) {
+    if (!this->getCurrentSaveCalled) return {};
+    if (!this->uncommitted.contains(levelID)) return {};
+
+    return this->uncommitted[levelID];
 }
