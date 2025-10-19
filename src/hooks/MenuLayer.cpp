@@ -10,14 +10,22 @@ class $modify(MyMenuLayer, MenuLayer) {
 		if (!MenuLayer::init()) return false;
 		static bool addedBrainrots = false;
         if (addedBrainrots) return true;
+        /*
 		for (const auto [k, v] : BrainrotRegistry::get()->brainrots) {
             auto brainrot = Brainrot::create(k, Brainrot::Age::Baby);
             brainrot->allowWander(true);
             SceneManager::get()->keepAcrossScenes(brainrot);
         }
         addedBrainrots = true;
-		
-
+		*/
+        SaveManager::get()->getCollectedBrainrots();
+        auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
+        for (const auto [k, v] : brainrots) {
+            auto brainrot = Brainrot::create(k, utilities::stringToAge(v.at("age")));
+            brainrot->allowWander(true);
+            SceneManager::get()->keepAcrossScenes(brainrot);
+        }
+        addedBrainrots = true;
 		return true;
 	}
 };

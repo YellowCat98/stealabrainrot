@@ -52,3 +52,7 @@ void SaveManager::commitCollectedChanges() {
     Mod::get()->setSavedValue<GamingComplexMap>("collected-brainrots", this->collectedUncommitted);
     this->getCollectedCalled = false;
 }
+
+SaveManager::GamingComplexMap SaveManager::getAllCollectedBrainrots() {
+    return this->collectedUncommitted;
+}

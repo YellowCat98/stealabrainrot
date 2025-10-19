@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <Brainrot.hpp>
 
 namespace utilities {
     namespace random {
@@ -22,4 +23,6 @@ namespace utilities {
             return *it;
         }
     }
+
+    Brainrot::Age stringToAge(const std::string& age);
 }
