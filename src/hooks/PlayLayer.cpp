@@ -23,9 +23,7 @@ class $modify(InsertBrainrot, PlayLayer) {
         if (level->m_stars == 0) return true;
 
         SaveManager::get()->getCurrentSave();
-        log::info("{}", SaveManager::get()->uncommitted);
         auto brianrots = SaveManager::get()->brainrotInLevel(fmt::to_string(level->m_levelID.value()));
-        log::info("{}", brianrots);
         
         if (brianrots.empty()) {
             m_fields->m_assignBrainrot = true;
@@ -34,10 +32,10 @@ class $modify(InsertBrainrot, PlayLayer) {
 
         m_fields->m_assignBrainrot = false;
 
-        return brainrotCollection();
+        return brainrotCollection(brianrots);
     }
 
-    bool brainrotCollection() {
+    bool brainrotCollection(std::vector<SaveManager::MapData> brainrots) {
         return true;
     }
 
