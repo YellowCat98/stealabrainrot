@@ -37,12 +37,12 @@ class $modify(InsertBrainrot, PlayLayer) {
         return brainrotCollection(brianrots);
     }
 
-    bool brainrotCollection(std::vector<SaveManager::MapData> brainrots) {
-        for (auto& brainrot : brainrots) {
+    bool brainrotCollection(SaveManager::GamingComplexMap brainrots) {
+        for (const auto [k, v] : brainrots) {
             // so uh theres no BrainrotCollectible it'll just be a ccsprite and playlayer detects when m_player1 or m_player 2 touch it
-            auto sprite = CCSprite::create(BrainrotRegistry::get()->brainrots[brainrot["id"]].c_str());
-            auto x = numFromString<float>(brainrot["x"]);
-            auto y = numFromString<float>(brainrot["y"]);
+            auto sprite = CCSprite::create(BrainrotRegistry::get()->brainrots[k].c_str());
+            auto x = numFromString<float>(v.at("x"));
+            auto y = numFromString<float>(v.at("y"));
             if (x.isErr()) {
                 log::error("Err: {}", x.err().value());
                 return true;
@@ -52,10 +52,10 @@ class $modify(InsertBrainrot, PlayLayer) {
             }
             auto point = ccp(x.unwrap(), y.unwrap());
             sprite->setPosition(point);
-            sprite->setID(fmt::format("{}{}", ""_spr, brainrot["id"]));
+            sprite->setID(fmt::format("{}{}", ""_spr, k));
             m_objectLayer->addChild(sprite);
             
-            m_fields->m_collectibles.insert({brainrot["id"], sprite});
+            m_fields->m_collectibles.insert({k, sprite});
         }
         return true;
     }
@@ -98,8 +98,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             auto theChosenOne = utilities::random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
 
             SaveManager::get()->getCurrentSave(); // push current save into memory
-            SaveManager::get()->pushChanges(fmt::to_string(m_level->m_levelID), {
-                {"id", theChosenOne},
+            SaveManager::get()->pushChanges(fmt::to_string(m_level->m_levelID), theChosenOne, {
                 {"x", fmt::to_string(pos.x)},
                 {"y", fmt::to_string(pos.y)}
             });
@@ -130,5 +129,22 @@ class $modify(InsertBrainrot, PlayLayer) {
         for (const auto [k, v] : m_fields->m_collected) v->setVisible(true);
         
         m_fields->m_collected.clear(); // while yes brainrots can spawn even if you die, you always still have to beat the level in order for the brainrot to save!
+    }
+
+    void levelComplete() {
+        SaveManager::get()->getCollectedBrainrots();
+        SaveManager::get()->getCurrentSave();
+        for (const auto [k, v] : m_fields->m_collected) {
+            SaveManager::get()->pushCollectedChanges(k, {
+                {"age", "baby"},
+                {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
+                {"found-in", fmt::to_string(m_level->m_levelID.value())}
+            });
+            SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
+        }
+        SaveManager::get()->commitCollectedChanges();
+        SaveManager::get()->commitChanges();
+
+        PlayLayer::levelComplete();
     }
 };

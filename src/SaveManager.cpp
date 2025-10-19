@@ -13,9 +13,9 @@ void SaveManager::getCurrentSave() {
     this->getCurrentSaveCalled = true;
 }
 
-void SaveManager::pushChanges(std::string levelID, MapData map) {
+void SaveManager::pushChanges(const std::string& levelID, const std::string& brainrotID, MapData map) {
     if (!this->getCurrentSaveCalled) return; // if i didnt have this here not calling getCurrentSave will just override the past changes
-    this->uncommitted[levelID].push_back(map);
+    this->uncommitted[levelID][brainrotID] = map;
 }
 
 void SaveManager::commitChanges() {
@@ -24,9 +24,31 @@ void SaveManager::commitChanges() {
     this->getCurrentSaveCalled = false;
 }
 
-std::vector<SaveManager::MapData> SaveManager::brainrotInLevel(std::string levelID) {
+SaveManager::GamingComplexMap SaveManager::brainrotInLevel(const std::string& levelID) {
     if (!this->getCurrentSaveCalled) return {};
     if (!this->uncommitted.contains(levelID)) return {};
 
     return this->uncommitted[levelID];
+}
+
+void SaveManager::removeChange(const std::string& levelID, const std::string& brainrotID) {
+    this->uncommitted.at(levelID).erase(brainrotID);
+    if (this->uncommitted.at(levelID).empty()) this->uncommitted.erase(levelID);
+}
+
+// anything under this comment is about collected brainrots
+
+void SaveManager::getCollectedBrainrots() {
+    this->collectedUncommitted = Mod::get()->getSavedValue<GamingComplexMap>("collected-brainrots");
+    this->getCollectedCalled = true;
+}
+
+void SaveManager::pushCollectedChanges(const std::string& brainrotID, SaveManager::MapData map) {
+    if (!this->getCollectedCalled) return;
+    this->collectedUncommitted.insert({brainrotID, map});
+}
+
+void SaveManager::commitCollectedChanges() {
+    Mod::get()->setSavedValue<GamingComplexMap>("collected-brainrots", this->collectedUncommitted);
+    this->getCollectedCalled = false;
 }

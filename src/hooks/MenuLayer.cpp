@@ -11,7 +11,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 		static bool addedBrainrots = false;
         if (addedBrainrots) return true;
 		for (const auto [k, v] : BrainrotRegistry::get()->brainrots) {
-            auto brainrot = Brainrot::create(k);
+            auto brainrot = Brainrot::create(k, Brainrot::Age::Baby);
             brainrot->allowWander(true);
             SceneManager::get()->keepAcrossScenes(brainrot);
         }

@@ -5,7 +5,7 @@
 
 using namespace geode::prelude;
 
-bool Brainrot::init(const std::string& brainrotID) {
+bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age) {
     if (!CCSprite::init()) return false;
 
     auto texture = CCTextureCache::get()->addImage(BrainrotRegistry::get()->brainrots[brainrotID].c_str(), true);
@@ -53,9 +53,9 @@ void Brainrot::allowWander(bool toggle) {
     this->canWander = toggle;
 }
 
-Brainrot* Brainrot::create(const std::string& brainrotID) {
+Brainrot* Brainrot::create(const std::string& brainrotID, Brainrot::Age age) {
     auto ret = new Brainrot();
-    if (ret && ret->init(brainrotID)) {
+    if (ret && ret->init(brainrotID, age)) {
         ret->autorelease();
         return ret;
     }
