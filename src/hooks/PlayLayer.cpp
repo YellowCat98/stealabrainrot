@@ -15,6 +15,7 @@ class $modify(InsertBrainrot, PlayLayer) {
         bool m_triggered;
         float m_elapsed;
         bool m_assignBrainrot; // when this is true, the mod will create brainrots, if not it would be called collection mode, collects brainrots!
+        SaveManager::MapData brainrots; // i do NOT want to write std map std vector and all that stuff
     };
 
     bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
@@ -72,7 +73,7 @@ class $modify(InsertBrainrot, PlayLayer) {
         PlayLayer::postUpdate(dt);
         if (m_fields->m_assignBrainrot) return brainrotAssignmentUpdate(dt);
 
-        brainrotCollectionUpdate();
+        return brainrotCollectionUpdate(dt);
     }
 
     // this is the code that runs every frame if on assignment mode
@@ -83,10 +84,11 @@ class $modify(InsertBrainrot, PlayLayer) {
 
         if (m_fields->m_elapsed >= m_fields->m_whenToPlace) {
             m_fields->m_triggered = true;
-            auto spr = CCSprite::create("GJ_button_01.png");
+
             auto pos = m_player1->getPosition();
-            spr->setPosition(pos);
-            this->m_objectLayer->addChild(spr);
+            //auto spr = CCSprite::create("GJ_button_01.png");
+            //spr->setPosition(pos);
+            //this->m_objectLayer->addChild(spr);
 
             auto theChosenOne = utilities::random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
 
@@ -101,7 +103,7 @@ class $modify(InsertBrainrot, PlayLayer) {
     }
 
     // this is the code that runs every frame if on collection mode
-    void brainrotCollectionUpdate() {
+    void brainrotCollectionUpdate(float dt) {
         //log::info("toilette great");
     }
 };
