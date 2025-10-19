@@ -8,13 +8,14 @@ using namespace geode::prelude;
 class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
 		if (!MenuLayer::init()) return false;
-		
-		static Brainrot* brainrot;
-		if (!brainrot) {
-			brainrot = Brainrot::create("h");
-			brainrot->allowWander(true);
-			SceneManager::get()->keepAcrossScenes(brainrot);
-		}
+		static bool addedBrainrots = false;
+        if (addedBrainrots) return true;
+		for (const auto [k, v] : BrainrotRegistry::get()->brainrots) {
+            auto brainrot = Brainrot::create(k);
+            brainrot->allowWander(true);
+            SceneManager::get()->keepAcrossScenes(brainrot);
+        }
+        addedBrainrots = true;
 		
 
 		return true;

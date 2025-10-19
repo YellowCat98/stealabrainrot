@@ -1,13 +1,14 @@
 #include <Brainrot.hpp> // i do <> for anything in the include folder
 #include <Utils.hpp>
 #include <numbers>
+#include <BrainrotRegistry.hpp>
 
 using namespace geode::prelude;
 
 bool Brainrot::init(const std::string& brainrotID) {
     if (!CCSprite::init()) return false;
 
-    auto texture = CCTextureCache::get()->addImage("tung_sahur.png"_spr, true);
+    auto texture = CCTextureCache::get()->addImage(BrainrotRegistry::get()->brainrots[brainrotID].c_str(), true);
     this->setTexture(texture);
     this->setTextureRect(CCRectMake(
         0, 0,

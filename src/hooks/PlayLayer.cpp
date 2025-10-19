@@ -24,7 +24,7 @@ class $modify(InsertBrainrot, PlayLayer) {
 
         SaveManager::get()->getCurrentSave();
         auto brianrots = SaveManager::get()->brainrotInLevel(fmt::to_string(level->m_levelID.value()));
-        
+        log::info("{}", brianrots);
         if (brianrots.empty()) {
             m_fields->m_assignBrainrot = true;
             return brainrotAssignment();
@@ -36,6 +36,20 @@ class $modify(InsertBrainrot, PlayLayer) {
     }
 
     bool brainrotCollection(std::vector<SaveManager::MapData> brainrots) {
+        for (auto& brainrot : brainrots) {
+            // so uh theres no BrainrotCollectible it'll just be a ccsprite and playlayer detects when m_player1 or m_player 2 touch it
+            auto sprite = CCSprite::create("GJ_button_01.png");
+            auto x = numFromString<float>(brainrot["x"]);
+            auto y = numFromString<float>(brainrot["y"]);
+            if (x.isErr()) {
+                log::error("Err: {}", x.err().value());
+            } else if (y.isErr()) {
+                log::error("Err: {}", y.err().value());
+            }
+            auto point = ccp(x.unwrap(), y.unwrap());
+            m_objectLayer->addChild(sprite);
+            sprite->setPosition(point);
+        }
         return true;
     }
 
@@ -87,6 +101,6 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     // this is the code that runs every frame if on collection mode
     void brainrotCollectionUpdate() {
-        log::info("toilette great");
+        //log::info("toilette great");
     }
 };
