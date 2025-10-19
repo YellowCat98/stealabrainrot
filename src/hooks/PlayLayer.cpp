@@ -15,7 +15,8 @@ class $modify(InsertBrainrot, PlayLayer) {
         bool m_triggered;
         float m_elapsed;
         bool m_assignBrainrot; // when this is true, the mod will create brainrots, if not it would be called collection mode, collects brainrots!
-        SaveManager::MapData brainrots; // i do NOT want to write std map std vector and all that stuff
+        std::map<std::string, CCSprite*> m_collectibles;
+        std::map<std::string, CCSprite*> m_collected;
     };
 
     bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
@@ -38,19 +39,23 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     bool brainrotCollection(std::vector<SaveManager::MapData> brainrots) {
         for (auto& brainrot : brainrots) {
-
             // so uh theres no BrainrotCollectible it'll just be a ccsprite and playlayer detects when m_player1 or m_player 2 touch it
             auto sprite = CCSprite::create(BrainrotRegistry::get()->brainrots[brainrot["id"]].c_str());
             auto x = numFromString<float>(brainrot["x"]);
             auto y = numFromString<float>(brainrot["y"]);
             if (x.isErr()) {
                 log::error("Err: {}", x.err().value());
+                return true;
             } else if (y.isErr()) {
                 log::error("Err: {}", y.err().value());
+                return true;
             }
             auto point = ccp(x.unwrap(), y.unwrap());
-            m_objectLayer->addChild(sprite);
             sprite->setPosition(point);
+            sprite->setID(fmt::format("{}{}", ""_spr, brainrot["id"]));
+            m_objectLayer->addChild(sprite);
+            
+            m_fields->m_collectibles.insert({brainrot["id"], sprite});
         }
         return true;
     }
@@ -104,6 +109,24 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     // this is the code that runs every frame if on collection mode
     void brainrotCollectionUpdate(float dt) {
-        //log::info("toilette great");
+        
+        for (const auto [k, v] : m_fields->m_collectibles) {
+            if (m_fields->m_collected.contains(k)) continue;
+
+            bool collisionPlayer1 = m_player1->boundingBox().intersectsRect(v->boundingBox());
+            bool collisionPlayer2 = m_player1->boundingBox().intersectsRect(v->boundingBox());
+
+            bool caughtBrainrot = collisionPlayer1 || collisionPlayer2;
+            if (caughtBrainrot) {
+                m_fields->m_collected.insert({k, v});
+                log::info("SNATCHED BRAINROT: {} (you probably dont need this but the pointer address to the sprite of the brainrot is `{}`)", k, fmt::ptr(v));
+                v->setVisible(false);
+            }
+        }
+    }
+
+    void resetLevel() {
+        PlayLayer::resetLevel();
+        m_fields->m_collected.clear(); // while yes brainrots can spawn even if you die, you always still have to beat the level in order for the brainrot to save!
     }
 };
