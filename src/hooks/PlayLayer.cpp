@@ -11,7 +11,7 @@ using namespace geode::prelude;
 // brainrot collectibles can be collected when m_player1 or m_player2 passes through it (ONLY those 2, if i allow every playerobject to collect it then globed will inerfere i thinks)
 class $modify(InsertBrainrot, PlayLayer) {
     struct Fields {
-        float m_whenToPlace; // this determines where to place the brainrot.
+        float m_whenToPlace; // this determines when to place the brainrot.
         bool m_triggered;
         float m_elapsed;
         bool m_assignBrainrot; // when this is true, the mod will create brainrots, if not it would be called collection mode, collects brainrots!
