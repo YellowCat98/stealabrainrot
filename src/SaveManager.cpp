@@ -56,3 +56,11 @@ void SaveManager::commitCollectedChanges() {
 SaveManager::GamingComplexMap SaveManager::getAllCollectedBrainrots() {
     return this->collectedUncommitted;
 }
+
+SaveManager::MapData SaveManager::getCollectedBrainrot(const std::string& brainrotID) {
+    auto allBrainrots = this->getAllCollectedBrainrots();
+    for (const auto [k, v] : allBrainrots) {
+        if (k == brainrotID) return v;
+    }
+    return {}; // brainrot of that ID was not found.
+}

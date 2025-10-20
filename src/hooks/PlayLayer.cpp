@@ -103,6 +103,7 @@ class $modify(InsertBrainrot, PlayLayer) {
                 {"y", fmt::to_string(pos.y)}
             });
             SaveManager::get()->commitChanges();
+            // BRAINROT lore: brainrots follow geometry dash players scent (for whatever reason...).
         }
     }
 
@@ -138,7 +139,8 @@ class $modify(InsertBrainrot, PlayLayer) {
             SaveManager::get()->pushCollectedChanges(k, {
                 {"age", "baby"},
                 {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
-                {"found-in", fmt::to_string(m_level->m_levelID.value())}
+                {"found-in", fmt::to_string(m_level->m_levelID.value())},
+                {"stars", fmt::to_string(utilities::random::randint(0, 2))} // PIECE OF LORE BEHIND BRAINROTS: the only reason you see them wandering in levels is because their previous owners neglected them, which is why they have little to no stars.
             });
             SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
         }

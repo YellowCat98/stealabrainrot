@@ -32,6 +32,7 @@ public:
     void pushCollectedChanges(const std::string& brainrotID, MapData data);
     void commitCollectedChanges();
     GamingComplexMap getAllCollectedBrainrots();
+    MapData getCollectedBrainrot(const std::string& brainrotID);
 
     GamingComplexMap collectedUncommitted;
     ComplexMap uncommitted;
