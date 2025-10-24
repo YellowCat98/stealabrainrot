@@ -45,7 +45,7 @@ void SaveManager::getCollectedBrainrots() {
 
 void SaveManager::pushCollectedChanges(const std::string& brainrotID, SaveManager::MapData map) {
     if (!this->getCollectedCalled) return;
-    this->collectedUncommitted.insert({brainrotID, map});
+    this->collectedUncommitted[brainrotID] = map;
 }
 
 void SaveManager::commitCollectedChanges() {
