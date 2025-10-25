@@ -23,7 +23,7 @@ bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age) {
     float angle = utilities::random::random(0.0f, 1.0f) * 2 * std::numbers::pi;
     velocity = ccp(std::cosf(angle) * speed, std::sinf(angle) * speed);
 
-    if (!canWander) this->scheduleUpdate();
+    this->scheduleUpdate();
     return true;
 }
 
@@ -47,10 +47,6 @@ void Brainrot::update(float dt) {
         velocity.y = -velocity.y;
     
     this->setPosition(this->getPosition() + ccpMult(velocity, dt));
-}
-
-void Brainrot::allowWander(bool toggle) {
-    this->canWander = toggle;
 }
 
 Brainrot* Brainrot::create(const std::string& brainrotID, Brainrot::Age age) {

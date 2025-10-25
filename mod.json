@@ -18,5 +18,26 @@
 		"sprites": [
 			"resources/*.png"
 		]
+	},
+	"settings": {
+		"brainrots-display": {
+			"name": "Brainrots wandering",
+			"type": "int",
+			"default": 0,
+			"description": "0: All collected brainrots will wander around the screen.\n1: Only your selected brainrot will wander around the screen.\n2: No brainrots will wander around the screen."
+			
+		},
+		"brainrots-in-playlayer": {
+			"name": "Brainrots while playing",
+			"type": "bool",
+			"default": false,
+			"description": "If true, hides your collected brainrots while playing a level.\nThis setting has no effect if the \"Brainrots Wandering\" setting is set to \"2\"."
+		},
+		"brainrots-in-editor": {
+			"name": "Brainrots in editor",
+			"type": "bool",
+			"default": false,
+			"description": "If true, hides your collected brainrots while in the editor.\nThis setting has no effect if the \"Brainrots Wandering\" setting is set to \"2\"."
+		}
 	}
 }

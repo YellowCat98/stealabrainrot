@@ -136,7 +136,13 @@ class $modify(InsertBrainrot, PlayLayer) {
         SaveManager::get()->getCollectedBrainrots();
         SaveManager::get()->getCurrentSave();
         for (const auto [k, v] : m_fields->m_collected) {
-            SaveManager::get()->pushCollectedChanges(k, {
+            auto tokens = SaveManager::get()->getAllTokens();
+            auto token = utilities::random::string(8);
+            for (auto& t : tokens) {
+                if (token == t) token = utilities::random::string(8);
+            }
+            SaveManager::get()->pushCollectedChanges(token, {
+                {"id", k},
                 {"age", "baby"},
                 {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
                 {"found-in", fmt::to_string(m_level->m_levelID.value())},

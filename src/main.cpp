@@ -17,4 +17,17 @@ $on_mod(Loaded) {
 		{"ta_ta_ta_sahur", "ta_sahur.png"_spr},
 		{"trulimero_trulichina", "trulimero.png"_spr}
 	};
+
+	BrainrotRegistry::get()->brainrotNames = {
+		{"tralalero_tralala", "Tralalero Tralala"},
+		{"tung_tung_tung_tung_sahur", "Tung Tung Tung Tung Sahur"},
+		{"bombardino_crocodilo", "Bombardino Crocodilo"},
+		{"chimpanzini_bananini", "Chimpanzini Bananini"},
+		{"lirili_larila", "Lirili Larila"},
+		{"cappuccino_assassino", "Cappuccino Assassino"}, 
+		{"ballerina_cappuccina", "Ballerina Cappuccina"},
+		{"trippi_troppi", "Trippi Troppi"},
+		{"ta_ta_ta_sahur", "Ta Ta Ta Sahur"},
+		{"trulimero_trulichina", "Trulimero Trulichina"}
+	};
 }

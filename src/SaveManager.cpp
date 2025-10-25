@@ -64,3 +64,13 @@ SaveManager::MapData SaveManager::getCollectedBrainrot(const std::string& brainr
     }
     return {}; // brainrot of that ID was not found.
 }
+
+std::vector<std::string> SaveManager::getAllTokens() {
+    std::vector<std::string> tokens = {};
+
+    auto brainrots = this->getAllCollectedBrainrots();
+    for (const auto [k, v] : brainrots) {
+        tokens.push_back(k);
+    }
+    return tokens;
+}

@@ -19,6 +19,21 @@ int random::randint(int a, int b) {
     return dist(gen);
 }
 
+std::string random::string(int length) {
+    static const char charset[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "0123456789"; // now i COULD generate this using ascii stuff and iterate this but i dont really feel like it
+
+        constexpr int charsetSize = sizeof(charset) - 1;
+
+        std::string id;
+        id.reserve(length);
+        for (size_t i = 0; i < length; ++i) {
+            id += charset[random::randint(0, charsetSize - 1)];
+        }
+        return id;
+}
 
 Brainrot::Age utilities::stringToAge(const std::string& age) {
     if (age == "baby") return Brainrot::Age::Baby;
@@ -41,10 +56,10 @@ std::string utilities::ageToString(Brainrot::Age age) {
     return std::string(""); // the compiler will probably complain if i dont do this
 }
 
-Brainrot::Age utilities::getBrainrotAge(int currentStars) {
-    if (IS_BETWEEN(0, currentStars, 5)) return Brainrot::Age::Baby;
-    if (IS_BETWEEN(5, currentStars, 10)) return Brainrot::Age::Child;
-    if (IS_BETWEEN(10, currentStars, 15)) return Brainrot::Age::TikTokUser;
-    if (IS_BETWEEN(15, currentStars, 20)) return Brainrot::Age::Teenager;
-    return Brainrot::Age::Adult; // brainrots are an immortal species, after they become adults, they do not age.
+Brainrot::Age utilities::getBrainrotAge(unsigned int currentStars) {
+    if (currentStars >= 20) return Brainrot::Age::Adult;
+    if (currentStars >= 15) return Brainrot::Age::Teenager;
+    if (currentStars >= 10) return Brainrot::Age::TikTokUser;
+    if (currentStars >= 5)  return Brainrot::Age::Child;
+    return Brainrot::Age::Baby;
 }

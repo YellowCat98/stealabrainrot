@@ -4,3 +4,4 @@
 #include <BrainrotRegistry.hpp>
 #include <Utils.hpp>
 #include <SaveManager.hpp>
+#include <BrainrotDisplay.hpp>

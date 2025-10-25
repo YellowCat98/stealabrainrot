@@ -2,7 +2,7 @@
 #include <vector>
 #include <Brainrot.hpp>
 
-#define IS_BETWEEN(a, x, b) a <= x && x <= b
+#define IS_BETWEEN(a, x, b) a <= x && x < b
 
 namespace utilities {
     namespace random {
@@ -24,9 +24,11 @@ namespace utilities {
             std::advance(it, i);
             return *it;
         }
+
+        std::string string(int length);
     }
 
     Brainrot::Age stringToAge(const std::string& age);
     std::string ageToString(Brainrot::Age age);
-    Brainrot::Age getBrainrotAge(int currentStars);
+    Brainrot::Age getBrainrotAge(unsigned int currentStars);
 }

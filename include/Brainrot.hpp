@@ -9,7 +9,6 @@ private:
     enum class Age : int; // since when the hell was "underlying type" a thing in enums
     std::string brainrotID;
     bool init(const std::string& brainrotID, Age age);
-    bool canWander = false;
     void update(float dt);
 
     cocos2d::CCPoint velocity;
@@ -25,5 +24,4 @@ public:
         Adult // requires 25 stars/moons
     };
     static Brainrot* create(const std::string& brainrotID, Age age);
-    void allowWander(bool toggle); // brainrots can wander around the screen if this is enabled, if not, they remain in a random position
 };
