@@ -16,6 +16,16 @@ bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age) {
         texture->getContentSize().height
     ));
 
+    float scale = 0.0f;
+    switch (age) {
+        case Brainrot::Age::Baby: scale = 0.55f; break;
+        case Brainrot::Age::Child: scale = 0.7f; break;
+        case Brainrot::Age::TikTokUser: scale = 0.85f; break;
+        case Brainrot::Age::Teenager: scale = 0.93f; break;
+        case Brainrot::Age::Adult: scale = 1.0f; break;
+    }
+    this->setScale(scale);
+
     this->setAnchorPoint({0.0f, 1.0f});
 
     speed = 100.0f;

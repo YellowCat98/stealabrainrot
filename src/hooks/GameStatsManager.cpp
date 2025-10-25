@@ -22,6 +22,7 @@ class $modify(RaiseBrainrot, GameStatsManager) {
                 int starsInBrainrot = starsAmount.unwrap() += p1;
                 brainrotData["stars"] = fmt::to_string(starsInBrainrot);
                 brainrotData["age"] = utilities::ageToString(utilities::getBrainrotAge(starsInBrainrot));
+                brainrotData["last-fed"] = fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
                 SaveManager::get()->pushCollectedChanges(equippedBrainrot, brainrotData);
                 log::info("{}", brainrotData);
                 SaveManager::get()->commitCollectedChanges();

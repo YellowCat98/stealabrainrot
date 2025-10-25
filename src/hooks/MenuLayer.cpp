@@ -29,15 +29,17 @@ class $modify(MyMenuLayer, MenuLayer) {
         switch (Mod::get()->getSettingValue<int>("brainrots-display")) { // you no longer have to do int64_t
             case 0: {
                 auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
+                if (brainrots.empty()) break;
                 for (const auto [k, v] : brainrots) {
                     auto brainrot = Brainrot::create(v.at("id"), utilities::stringToAge(v.at("age")));
-                    brainrot->setID(fmt::format("{}{}", ""_spr, k));
+                    brainrot->setID(fmt::format("{}{}-{}", ""_spr, v.at("id"), k));
                     SceneManager::get()->keepAcrossScenes(brainrot);
                 }
                 break;
             }
             case 1: {
                 auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
+                if (brainrots.empty()) break;
                 auto brainrotID = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
                 auto brainrot = Brainrot::create(brainrots[brainrotID].at("id"), utilities::stringToAge(SaveManager::get()->getCollectedBrainrot(brainrotID).at("age")));
                 brainrot->setID(fmt::format("{}{}", ""_spr, brainrotID));
