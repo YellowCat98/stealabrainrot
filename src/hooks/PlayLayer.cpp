@@ -94,9 +94,31 @@ class $modify(InsertBrainrot, PlayLayer) {
             //auto spr = CCSprite::create("GJ_button_01.png");
             //spr->setPosition(pos);
             //this->m_objectLayer->addChild(spr);
+            SaveManager::get()->getCollectedBrainrots();
+            
+            std::function<std::string()> ensureNoDupes = [&]() {
+                static int dupes = 0;
+                auto theChosenOne = utilities::random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
 
-            auto theChosenOne = utilities::random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
+                bool duplicate = false;
 
+                for (const auto [k, v] : SaveManager::get()->getAllCollectedBrainrots()) {
+                    if (theChosenOne == v.at("id")) {
+                        duplicate = true;
+                        dupes += 1;
+                        break;
+                    }
+                }
+                if (duplicate) {
+                    if (dupes >= BrainrotRegistry::get()->brainrots.size()) {
+                        return theChosenOne;
+                    }
+                    return ensureNoDupes();
+                }
+                dupes = 0;
+                return theChosenOne;
+            };
+            auto theChosenOne = ensureNoDupes();
             SaveManager::get()->getCurrentSave(); // push current save into memory
             SaveManager::get()->pushChanges(fmt::to_string(m_level->m_levelID), theChosenOne, {
                 {"x", fmt::to_string(pos.x)},
@@ -119,7 +141,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             bool caughtBrainrot = collisionPlayer1 || collisionPlayer2;
             if (caughtBrainrot) {
                 m_fields->m_collected.insert({k, v});
-                log::info("SNATCHED BRAINROT: {} (you probably dont need this but the pointer address to the sprite of the brainrot is `{}`)", k, fmt::ptr(v));
+                log::info("SNATCHED BRAINROT: {} (you probably dont need this but the pointer address to the sprite of the brainrot is `{}`)", BrainrotRegistry::get()->brainrotNames[k], fmt::ptr(v));
                 v->setVisible(false);
             }
         }
