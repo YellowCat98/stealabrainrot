@@ -108,7 +108,7 @@ bool BrainrotDisplay::init() {
     auto backMenu = CCMenu::create();
     backMenu->setID("back-menu");
     
-    auto backBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png"), [this](CCObject*) {
+    auto backBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName(utilities::random::randint(0, 1) ? "GJ_arrow_01_001.png" : "GJ_arrow_02_001.png"), [this](CCObject*) {
         this->keyBackClicked();
     });
     backMenu->addChild(backBtn);
