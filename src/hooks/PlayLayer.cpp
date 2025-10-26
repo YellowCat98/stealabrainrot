@@ -159,12 +159,20 @@ class $modify(InsertBrainrot, PlayLayer) {
         SaveManager::get()->getCurrentSave();
         for (const auto [k, v] : m_fields->m_collected) {
             auto tokens = SaveManager::get()->getAllTokens();
-            auto token = utilities::random::string(8);
-            for (auto& t : tokens) {
-                if (token == t) token = utilities::random::string(8);
+            std::string token;
+            do {
+                token = utilities::random::string(8);
+            } while (std::find(tokens.begin(), tokens.end(), token) != tokens.end());
+
+            int dupeNumber = 1;
+
+            for (const auto [cock, v] : SaveManager::get()->getAllCollectedBrainrots()) {
+                if (k == cock) ++dupeNumber;
             }
+
             SaveManager::get()->pushCollectedChanges(token, {
                 {"id", k},
+                {"dupe", fmt::to_string(dupeNumber)}, // the dupe key determines what number duplicate the brainrot is so it's distinguishable in brainrot display
                 {"age", "baby"},
                 {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
                 {"found-in", fmt::to_string(m_level->m_levelID.value())},
