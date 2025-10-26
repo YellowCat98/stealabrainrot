@@ -8,11 +8,12 @@ class Brainrot : public cocos2d::CCSprite {
 private:
     enum class Age : int; // since when the hell was "underlying type" a thing in enums
     std::string brainrotID;
-    bool init(const std::string& brainrotID, Age age);
+    bool init(const std::string& brainrotID, Age age, const std::string& nameAboveHead);
     void update(float dt);
 
     cocos2d::CCPoint velocity;
     float speed;
+    cocos2d::CCLabelBMFont* label;
 
 public:
 
@@ -23,5 +24,6 @@ public:
         Teenager, // requires 15 stars/moons
         Adult // requires 25 stars/moons
     };
-    static Brainrot* create(const std::string& brainrotID, Age age);
+    static Brainrot* create(const std::string& brainrotID, Age age, const std::string& nameAboveHead);
+    void setLabelColor(const cocos2d::ccColor3B& col);
 };

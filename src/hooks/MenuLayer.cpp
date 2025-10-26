@@ -31,7 +31,7 @@ class $modify(MyMenuLayer, MenuLayer) {
                 auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
                 if (brainrots.empty()) break;
                 for (const auto [k, v] : brainrots) {
-                    auto brainrot = Brainrot::create(v.at("id"), utilities::stringToAge(v.at("age")));
+                    auto brainrot = Brainrot::create(v.at("id"), utilities::stringToAge(v.at("age")), "");
                     brainrot->setID(fmt::format("{}{}-{}", ""_spr, v.at("id"), k));
                     SceneManager::get()->keepAcrossScenes(brainrot);
                 }
@@ -41,7 +41,7 @@ class $modify(MyMenuLayer, MenuLayer) {
                 auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
                 if (brainrots.empty()) break;
                 auto brainrotID = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
-                auto brainrot = Brainrot::create(brainrots[brainrotID].at("id"), utilities::stringToAge(SaveManager::get()->getCollectedBrainrot(brainrotID).at("age")));
+                auto brainrot = Brainrot::create(brainrots[brainrotID].at("id"), utilities::stringToAge(SaveManager::get()->getCollectedBrainrot(brainrotID).at("age")), "");
                 brainrot->setID(fmt::format("{}{}", ""_spr, brainrotID));
                 SceneManager::get()->keepAcrossScenes(brainrot);
                 break;

@@ -5,7 +5,7 @@
 
 using namespace geode::prelude;
 
-bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age) {
+bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age, const std::string& nameAboveHead) {
     if (!CCSprite::init()) return false;
 
     auto texture = CCTextureCache::get()->addImage(BrainrotRegistry::get()->brainrots[brainrotID].c_str(), true);
@@ -33,8 +33,23 @@ bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age) {
     float angle = utilities::random::random(0.0f, 1.0f) * 2 * std::numbers::pi;
     velocity = ccp(std::cosf(angle) * speed, std::sinf(angle) * speed);
 
+    if (!nameAboveHead.empty()) {
+        auto label = CCLabelBMFont::create(nameAboveHead.c_str(), "bigFont.fnt");
+        label->setAnchorPoint({{0.5f, 0.0f}});
+        label->setPosition({
+            this->getContentWidth() / 2,
+            this->getContentHeight()
+        });
+        this->label = label;
+        this->addChild(label, 1);
+    }
+
     this->scheduleUpdate();
     return true;
+}
+
+void Brainrot::setLabelColor(const ccColor3B& col) {
+    this->label->setColor(col);
 }
 
 void Brainrot::update(float dt) {
@@ -59,9 +74,9 @@ void Brainrot::update(float dt) {
     this->setPosition(this->getPosition() + ccpMult(velocity, dt));
 }
 
-Brainrot* Brainrot::create(const std::string& brainrotID, Brainrot::Age age) {
+Brainrot* Brainrot::create(const std::string& brainrotID, Brainrot::Age age, const std::string& nameAboveHead) {
     auto ret = new Brainrot();
-    if (ret && ret->init(brainrotID, age)) {
+    if (ret && ret->init(brainrotID, age, nameAboveHead)) {
         ret->autorelease();
         return ret;
     }
