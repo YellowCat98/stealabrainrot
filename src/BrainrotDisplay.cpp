@@ -103,50 +103,33 @@ bool BrainrotDisplay::init() {
     this->brainrots = brainrots;
     this->addChild(brainrots);
     this->addChild(bg);
-    //this->setTouchEnabled(true);
-
+    
     return true;
 }
 
 void BrainrotDisplay::onEnter() {
     CCLayer::onEnter();
-    //CCDirector::get()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
-    //this->setTouchEnabled(true);
+    CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
 }
 
 void BrainrotDisplay::onExit() {
-    //CCDirector::get()->getTouchDispatcher()->removeDelegate(this);
+    CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
     CCLayer::onExit();
 }
 
 bool BrainrotDisplay::ccTouchBegan(CCTouch* touch, CCEvent* event) {
-    log::info("helloi");
     auto location = touch->getLocation();
-    log::info("hello");
     CCObject* obj = nullptr;
     CCARRAY_FOREACH(brainrots->getChildren(), obj) {
         auto brainrot = static_cast<Brainrot*>(obj);
         if (!brainrot->isVisible()) continue;
 
         if (brainrot->boundingBox().containsPoint(location)) {
-            log::info("boo");
             this->brainrotTouchCallback(brainrot);
             return true;
         }
     }
     return true;
-}
-
-void BrainrotDisplay::ccTouchMoved(cocos2d::CCTouch *touch, cocos2d::CCEvent *event) {
-    return CCLayer::ccTouchMoved(touch, event);
-}
-
-void BrainrotDisplay::ccTouchEnded(cocos2d::CCTouch *touch, cocos2d::CCEvent *event) {
-    return CCLayer::ccTouchEnded(touch, event);
-}
-
-void BrainrotDisplay::ccTouchCancelled(cocos2d::CCTouch *touch, cocos2d::CCEvent *event) {
-    return CCLayer::ccTouchCancelled(touch, event);
 }
 
 void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
@@ -157,7 +140,6 @@ BrainrotDisplay* BrainrotDisplay::create() {
     auto ret = new BrainrotDisplay();
     if (ret && ret->init()) {
         ret->autorelease();
-        //ret->setTouchEnabled(true);
         return ret;
     }
     delete ret;
@@ -167,7 +149,7 @@ BrainrotDisplay* BrainrotDisplay::create() {
 CCScene* BrainrotDisplay::scene() {
     auto scene = CCScene::create();
     auto layer = BrainrotDisplay::create();
-    scene->addChild(layer);
     layer->setTouchEnabled(true);
+    scene->addChild(layer);
     return scene;
 }
