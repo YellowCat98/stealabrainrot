@@ -3,52 +3,6 @@
 
 using namespace geode::prelude;
 
-/*
-bool BrainrotDisplay::init() {
-    if (!CCLayer::init()) return false;
-
-    this->setColor({129, 133, 137});
-    this->setOpacity(255);
-    auto winSize = CCDirector::get()->getWinSize();
-    auto carpet = CCLayer::create({255, 105, 97, 255}, winSize.width / 2.5f, winSize.height);
-    carpet->setID("carpet");
-    carpet->ignoreAnchorPointForPosition(false);
-    carpet->setPosition({winSize.width / 2, winSize.height / 2});
-    carpet->setZOrder(1);
-
-    auto behindCarpet = CCLayer::create({ 180, 180, 180, 255 }, carpet->getContentWidth() * 1.2f, carpet->getContentHeight());
-    behindCarpet->setID("behind-carpet");
-    behindCarpet->ignoreAnchorPointForPosition(false);
-    behindCarpet->setPosition(carpet->getPosition());
-
-    auto menu = CCMenu::create();
-    menu->setID("brainrots-left");
-
-    SaveManager::get()->getCollectedBrainrots();
-    auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
-
-    for (const auto [k, v] : brainrots) {
-        auto button = CCMenuItemExt::createSpriteExtraWithFilename(BrainrotRegistry::get()->brainrots[v.at("id")], 0.5f, [this](CCMenuItemSpriteExtra* btn) {
-            return this->brainrotTouchCallback(btn);
-        });
-        button->setID(fmt::format("{}-{}", k, v.at("id")));
-        menu->addChild(button);
-    }
-    menu->setLayout(geode::ColumnLayout::create()
-        ->setAxisAlignment(AxisAlignment::Even)
-        ->setGap(0.25f)
-        //->setAutoScale(false)
-    );
-
-    menu->setPosition({carpet->getPositionX() - carpet->getContentWidth() / 2 - 50.0f, winSize.height / 2});
-
-    this->addChild(menu);
-    this->addChild(carpet);
-    this->addChild(behindCarpet);
-    return true;
-}
-*/
-
 // i put a lot of care into low chances because this will ONLY be used for distinguishible duplicates
 std::string toRoman(int num) {
     std::unordered_map<int, std::string> romans = {
@@ -70,7 +24,7 @@ std::string toRoman(int num) {
 
 bool BrainrotDisplay::init() {
     if (!CCLayer::init()) return false;
-    
+    this->setKeypadEnabled(true);
 
     auto bg = MenuGameLayer::create();
     bg->setID("background");
@@ -124,11 +78,42 @@ bool BrainrotDisplay::init() {
         ->setGap(5.0f)
     );
 
+    auto infoMenu = CCMenu::create();
+    infoMenu->setID("info-menu");
+    infoMenu->setAnchorPoint({1.0f, 0.0f});
+
+    auto infoBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png"), [this](CCMenuItemSpriteExtra* self) {
+        // i got a little bored so erm
+        bool runningOnLinux = (std::getenv("WINEPREFIX") || std::getenv("WINELOADER") || std::getenv("WINEDEBUG") || GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version"));
+        FLAlertLayer::create(
+            "Info",
+            "Here lies all your collected brainrots.\n"
+            "Duplicate brainrots are distinguished via the roman numeral after their name.\n"
+            "The brainrot whose name is green is the current equipped brainrot.\n"
+            "Press on a brainrot to view information about it and equip it.\n",
+            // ok you know i have to do the random thingy here too!
+            utilities::random::choice<std::string>({"Understood!", "Wha..?", "i think i got it!", "OK", "Absolute OK!", (runningOnLinux ? "i use arch btw" : "i use NT btw"), "Pay 250 Robux to unlock VIP"}).c_str()
+        )->show();
+    });
+
+    infoMenu->addChild(infoBtn);
+
+    infoMenu->setLayout(SimpleRowLayout::create()
+        ->setMainAxisAlignment(MainAxisAlignment::End)
+        ->setCrossAxisAlignment(CrossAxisAlignment::End)
+        ->setGap(5.0f)
+    );
+
     this->brainrots = brainrots;
     this->addChild(brainrots);
     this->addChild(bg);
     this->addChildAtPosition(backMenu, Anchor::TopLeft, {12.0f, -25.0f}, false);
+    this->addChildAtPosition(infoMenu, Anchor::BottomRight, {-10.0f, 10.0f}, false);
     return true;
+}
+
+void BrainrotDisplay::keyBackClicked() {
+    CCDirector::get()->popSceneWithTransition(0.5f, kPopTransitionFade);
 }
 
 void BrainrotDisplay::onEnter() {
@@ -203,7 +188,7 @@ void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
                         if (btn2) {
                             brainrot->setLabelColor({ 0, 255, 13 });
                             Mod::get()->setSavedValue<std::string>("equipped-brainrot", token);
-                            Notification::create(fmt::format("Equipped {}!", BrainrotRegistry::get()->brainrotNames[id]))->show();
+                            Notification::create(fmt::format("Equipped {} {}!", BrainrotRegistry::get()->brainrotNames[id], toRoman(numFromString<int>(brainrotData.at("dupe")).unwrap())))->show();
                         }
                     }
                 );
