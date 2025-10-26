@@ -101,10 +101,33 @@ bool BrainrotDisplay::init() {
 
         brainrots->addChild(brainrot);
     }
+
+    // i was too lazy so i took the back button code from my other mod
+    // https://github.com/YellowCat98/SerpentLua/blob/9c782168cd141faed594baf647ba693d13265b9a/src/internal/ui/ScriptsLayer.cpp#L173C1-L191C81
+
+    auto backMenu = CCMenu::create();
+    backMenu->setID("back-menu");
+    
+    auto backBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png"), [this](CCObject*) {
+        this->keyBackClicked();
+    });
+    backMenu->addChild(backBtn);
+
+    // some parts of the quit button code is taken from geode's own source code
+    // more specifically at
+    // https://github.com/geode-sdk/geode/blob/0da07978549a898c98ff54efdeb08dda3dc55787/loader/src/ui/mods/ModsLayer.cpp#L371
+
+    backMenu->setAnchorPoint({0.0f, 0.5f});
+
+    backMenu->setLayout(SimpleRowLayout::create()
+        ->setMainAxisAlignment(MainAxisAlignment::Start)
+        ->setGap(5.0f)
+    );
+
     this->brainrots = brainrots;
     this->addChild(brainrots);
     this->addChild(bg);
-    
+    this->addChildAtPosition(backMenu, Anchor::TopLeft, {12.0f, -25.0f}, false);
     return true;
 }
 
