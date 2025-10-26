@@ -5,9 +5,10 @@
 
 using namespace geode::prelude;
 
-bool Brainrot::init(const std::string& brainrotID, Brainrot::Age age, const std::string& nameAboveHead) {
+bool Brainrot::init(const std::string& brainrotID, const std::string& token, Brainrot::Age age, const std::string& nameAboveHead) {
     if (!CCSprite::init()) return false;
-
+    this->brainrotID = brainrotID;
+    this->brainrotToken = token;
     auto texture = CCTextureCache::get()->addImage(BrainrotRegistry::get()->brainrots[brainrotID].c_str(), true);
     this->setTexture(texture);
     this->setTextureRect(CCRectMake(
@@ -74,9 +75,9 @@ void Brainrot::update(float dt) {
     this->setPosition(this->getPosition() + ccpMult(velocity, dt));
 }
 
-Brainrot* Brainrot::create(const std::string& brainrotID, Brainrot::Age age, const std::string& nameAboveHead) {
+Brainrot* Brainrot::create(const std::string& brainrotID, const std::string& token, Brainrot::Age age, const std::string& nameAboveHead) {
     auto ret = new Brainrot();
-    if (ret && ret->init(brainrotID, age, nameAboveHead)) {
+    if (ret && ret->init(brainrotID, token, age, nameAboveHead)) {
         ret->autorelease();
         return ret;
     }

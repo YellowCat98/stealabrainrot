@@ -88,8 +88,9 @@ bool BrainrotDisplay::init() {
 
     SaveManager::get()->getCollectedBrainrots();
     for (const auto [k, v] : SaveManager::get()->getAllCollectedBrainrots()) {
-        auto brainrot = Brainrot::create(v.at("id"), 
-            utilities::stringToAge(v.at("age")), 
+        auto brainrot = Brainrot::create(v.at("id"),
+            k,
+            utilities::stringToAge(v.at("age")),
             fmt::format("{} {}", BrainrotRegistry::get()->brainrotNames[v.at("id")],
                 toRoman(numFromString<int>(v.at("dupe")).unwrap())
             )
@@ -133,7 +134,59 @@ bool BrainrotDisplay::ccTouchBegan(CCTouch* touch, CCEvent* event) {
 }
 
 void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
-    log::info("Touched {}! he {}.", brainrot->getID(), utilities::random::choice<std::string>({"was offended", "wants to kill you", "is yelling bad words at you"}));
+    auto token = brainrot->brainrotToken;
+    auto id = brainrot->brainrotID;
+
+    auto brainrotData = SaveManager::get()->getCollectedBrainrot(token);
+
+    auto previousToken = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
+    auto previousID = SaveManager::get()->getCollectedBrainrot(previousToken).at("id");
+    
+    auto previousBrainrot = static_cast<Brainrot*>(brainrots->getChildByID(fmt::format("{}-{}", previousID, previousToken)));
+
+    previousBrainrot->setLabelColor({255, 255, 255});
+
+
+    geode::createQuickPopup(
+        "Brainrot Info",
+        fmt::format(
+            "Name: {}\n"
+            "ID: {}\n"
+            "Age: {}\n"
+            "Caught at: {}\n"
+            "Last fed: {}\n"
+            "Stars/Moons fed: {}\n"
+            "Status: {}",
+            fmt::format("{} {}", BrainrotRegistry::get()->brainrotNames[brainrotData.at("id")], toRoman(numFromString<int>(brainrotData.at("dupe")).unwrap())),
+            brainrotData.at("id"),
+            brainrotData.at("age"),
+            fmt::format("{:%Y-%m-%d %H:%M:%S}", std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::from_time_t(static_cast<std::time_t>(numFromString<int>(brainrotData.at("collected-at")).unwrap())))),
+            fmt::format("{:%Y-%m-%d %H:%M:%S}", std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::from_time_t(static_cast<std::time_t>(numFromString<int>(brainrotData.at("last-fed")).unwrap())))),
+            brainrotData.at("stars"),
+            previousToken == token ? "Equipped" : "Not equipped"
+        ),
+        "OK", "EQUIP",
+        [=](FLAlertLayer*, bool btn2) {
+            if (btn2) {
+                createQuickPopup(
+                    "Confirmation",
+                    fmt::format(
+                        "Are you sure you want to equip {} {}?",
+                        BrainrotRegistry::get()->brainrotNames[brainrotData.at("id")], toRoman(numFromString<int>(brainrotData.at("dupe")).unwrap())
+                    ),
+                    utilities::random::choice<std::string>({"No!!", "i missclicked", "surely not", "i do not agree", "no, smh.."}).c_str(),
+                    utilities::random::choice<std::string>({"OK", "Okay", "Duh??", "absolutely yes", "why would i click the button duh??", "Alright!", "k", "alr", fmt::format("{} says absolutely!", GJAccountManager::get()->m_username)}).c_str(),
+                    [=](FLAlertLayer*, bool btn2) {
+                        if (btn2) {
+                            brainrot->setLabelColor({ 0, 255, 13 });
+                            Mod::get()->setSavedValue<std::string>("equipped-brainrot", token);
+                            Notification::create(fmt::format("Equipped {}!", BrainrotRegistry::get()->brainrotNames[id]))->show();
+                        }
+                    }
+                );
+            }
+        }
+    );
 }
 
 BrainrotDisplay* BrainrotDisplay::create() {
