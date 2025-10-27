@@ -84,7 +84,13 @@ bool BrainrotDisplay::init() {
 
     auto infoBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png"), [this](CCMenuItemSpriteExtra* self) {
         // i got a little bored so erm
-        bool runningOnLinux = (std::getenv("WINEPREFIX") || std::getenv("WINELOADER") || std::getenv("WINEDEBUG") || GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version"));
+        #ifdef GEODE_IS_WINDOWS
+            bool runningOnLinux = (std::getenv("WINEPREFIX") || std::getenv("WINELOADER") || std::getenv("WINEDEBUG") || GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version"));
+        #elif GEODE_IS_ANDROID
+            bool runningOnLinux = true;
+        #else
+            bool runningOnLinux = false;
+        #endif
         FLAlertLayer::create(
             "Info",
             "Here lies all your collected brainrots.\n"
