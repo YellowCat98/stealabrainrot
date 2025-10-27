@@ -41,13 +41,19 @@ $on_mod(Loaded) {
 		auto now = std::chrono::system_clock::now();
 
 		auto trueLastFed = std::chrono::system_clock::from_time_t(lastFed);
-
+		int hours = v.at("age") == "tiktok-user" ? 24 : 48;
 		if (std::chrono::duration_cast<std::chrono::hours>(now - trueLastFed).count() >= 48) {
 			log::warn("{} {} has run away due to starvation!", BrainrotRegistry::get()->brainrotNames[v.at("id")], utilities::toRoman(numFromString<int>(v.at("dupe")).unwrap()));
 			SaveManager::get()->pushChanges(v.at("found-in"), v.at("id"), {
-				{"token", k},
-				{"x", fmt::to_string(v.at("x"))},
-				{"y", fmt::to_string(v.at("y"))}
+				{"token", k}, // this key will be used to identify in the playlayer hook if a brainrot is a runaway brainrot
+				{"age", v.at("age")},
+				{"dupe", v.at("dupe")},
+				{"x", v.at("x")},
+				{"y", v.at("y")},
+				{"collected-at", v.at("collected-at")},
+				{"found-in", v.at("found-in")},
+				{"stars", v.at("stars")},
+				{"last-fed", v.at("last-fed")}
 			});
 			runawayTokens.push_back(k);
 		}

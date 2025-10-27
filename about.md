@@ -23,6 +23,8 @@
 - **Adult**: Your brainrot becomes an Adult once it has been fed 20 stars/moons.
 - Once a brainrot becomes an adult, it will remain at that age forever as brainrots are an immortal species.
 - You can own more than one of the same brainrot, but it will be treated as a separate brainrot, you can distinguish which one is which by the roman numeral after their name in the Brainrot Lair.
+- If you do not feed a brainrot for **48 hours**, it will run away. However if it is a TikTok User brainrot, it will run away after **24 hours** instead of 48 hours of not being fed, so please alternate between equipping brainrots to ensure they are all fed.
+
 
 **some fun stuff i wanted to throw into the description**
 - DID YOU KNOW: at January 19, 2038, 03:14:07 UTC, this mod will not work properly as it relies on Unix Timestamp (this is assuming you dont upgrade your device to a newer one.)

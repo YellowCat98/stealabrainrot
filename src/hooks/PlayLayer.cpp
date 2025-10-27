@@ -15,8 +15,9 @@ class $modify(InsertBrainrot, PlayLayer) {
         bool m_triggered;
         float m_elapsed;
         bool m_assignBrainrot; // when this is true, the mod will create brainrots, if not it would be called collection mode, collects brainrots!
-        std::map<std::string, CCSprite*> m_collectibles;
-        std::map<std::string, CCSprite*> m_collected;
+        std::unordered_map<std::string, CCSprite*> m_collectibles;
+        std::unordered_map<std::string, CCSprite*> m_collected;
+        std::unordered_map<std::string, std::pair<std::string, SaveManager::MapData>> m_runawayBrainrots; // { brainrotid: {brainrottoken, brainrotData}}
     };
 
     bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
@@ -40,7 +41,9 @@ class $modify(InsertBrainrot, PlayLayer) {
     bool brainrotCollection(SaveManager::GamingComplexMap brainrots) {
         for (const auto [k, v] : brainrots) {
             // so uh theres no BrainrotCollectible it'll just be a ccsprite and playlayer detects when m_player1 or m_player 2 touch it
+            if (v.contains("token")) m_fields->m_runawayBrainrots.insert({k, {v.at("token"), v}});
             auto sprite = CCSprite::create(BrainrotRegistry::get()->brainrots[k].c_str());
+            sprite->setScale(0.055f);
             auto x = numFromString<float>(v.at("x"));
             auto y = numFromString<float>(v.at("y"));
             if (x.isErr()) {
@@ -160,27 +163,48 @@ class $modify(InsertBrainrot, PlayLayer) {
         for (const auto [k, v] : m_fields->m_collected) {
             auto tokens = SaveManager::get()->getAllTokens();
             std::string token;
-            do {
-                token = utilities::random::string(8);
-            } while (std::find(tokens.begin(), tokens.end(), token) != tokens.end());
+            if (m_fields->m_runawayBrainrots.contains(k)) {
+                token = m_fields->m_runawayBrainrots.at(k).first;
+            } else {
+                do {
+                    token = utilities::random::string(8);
+                } while (std::find(tokens.begin(), tokens.end(), token) != tokens.end());
+            }
 
             int dupeNumber = 1;
 
             for (const auto [cock, v] : SaveManager::get()->getAllCollectedBrainrots()) {
                 if (k == cock) ++dupeNumber;
             }
+            SaveManager::MapData whatToPush;
+            if (m_fields->m_runawayBrainrots.contains(k)) {
+                whatToPush = {
+                    {"id", k},
+                    {"age", m_fields->m_runawayBrainrots.at(k).second.at("age")},
+                    {"dupe", m_fields->m_runawayBrainrots.at(k).second.at("dupe")},
+                    {"x", m_fields->m_runawayBrainrots.at(k).second.at("x")},
+                    {"y", m_fields->m_runawayBrainrots.at(k).second.at("y")},
+                    {"collected-at", m_fields->m_runawayBrainrots.at(k).second.at("collected-at")},
+                    {"found-in", m_fields->m_runawayBrainrots.at(k).second.at("found-in")},
+                    {"stars", m_fields->m_runawayBrainrots.at(k).second.at("stars")},
+                    {"last-fed", m_fields->m_runawayBrainrots.at(k).second.at("last-fed")}
+                };
+            } else {
+                whatToPush = {
+                    {"id", k},
+                    {"dupe", fmt::to_string(dupeNumber)}, // the dupe key determines what number duplicate the brainrot is so it's distinguishable in brainrot display
+                    {"age", "baby"},
+                    {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
+                    {"x", fmt::to_string(v->getPositionX())},
+                    {"y", fmt::to_string(v->getPositionY())},
+                    {"last-fed", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
+                    {"found-in", fmt::to_string(m_level->m_levelID.value())},
+                    {"stars", fmt::to_string(utilities::random::randint(0, 2))} // PIECE OF LORE BEHIND BRAINROTS: the only reason you see them wandering in levels is because their previous owners neglected them, which is why they have little to no stars.
+                };
+            }
 
-            SaveManager::get()->pushCollectedChanges(token, {
-                {"id", k},
-                {"dupe", fmt::to_string(dupeNumber)}, // the dupe key determines what number duplicate the brainrot is so it's distinguishable in brainrot display
-                {"age", "baby"},
-                {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
-                {"x", fmt::to_string(v->getPositionX())},
-                {"y", fmt::to_string(v->getPositionY())},
-                {"last-fed", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
-                {"found-in", fmt::to_string(m_level->m_levelID.value())},
-                {"stars", fmt::to_string(utilities::random::randint(0, 2))} // PIECE OF LORE BEHIND BRAINROTS: the only reason you see them wandering in levels is because their previous owners neglected them, which is why they have little to no stars.
-            });
+            SaveManager::get()->pushCollectedChanges(token, whatToPush);
+
             SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
         }
         SaveManager::get()->commitCollectedChanges();

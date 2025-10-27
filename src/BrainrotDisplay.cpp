@@ -137,11 +137,6 @@ void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
     auto brainrotData = SaveManager::get()->getCollectedBrainrot(token);
 
     auto previousToken = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
-    auto previousID = SaveManager::get()->getCollectedBrainrot(previousToken).at("id");
-    
-    auto previousBrainrot = static_cast<Brainrot*>(brainrots->getChildByID(fmt::format("{}-{}", previousID, previousToken)));
-
-    previousBrainrot->setLabelColor({255, 255, 255});
 
 
     geode::createQuickPopup(
@@ -175,6 +170,13 @@ void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
                     utilities::random::choice<std::string>({"OK", "Okay", "Duh??", "absolutely yes", "why would i click the button duh??", "Alright!", "k", "alr", fmt::format("{} says absolutely!", GJAccountManager::get()->m_username)}).c_str(),
                     [=](FLAlertLayer*, bool btn2) {
                         if (btn2) {
+                                if (SaveManager::get()->getAllCollectedBrainrots().contains(previousToken)) {
+                                    auto previousID = SaveManager::get()->getCollectedBrainrot(previousToken).at("id");
+        
+                                    auto previousBrainrot = static_cast<Brainrot*>(brainrots->getChildByID(fmt::format("{}-{}", previousID, previousToken)));
+
+                                    previousBrainrot->setLabelColor({255, 255, 255});
+                                }
                             brainrot->setLabelColor({ 0, 255, 13 });
                             Mod::get()->setSavedValue<std::string>("equipped-brainrot", token);
                             Notification::create(fmt::format("Equipped {} {}!", BrainrotRegistry::get()->brainrotNames[id], utilities::toRoman(numFromString<int>(brainrotData.at("dupe")).unwrap())))->show();
