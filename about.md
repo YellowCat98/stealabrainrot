@@ -1,5 +1,7 @@
 # Steal a brainrot
 
+## ModTober25 (What The Heck!?) Submission!
+
 - Be able to STEAL brainrots while playing geometry dash levels!
 - Brainrots are an unknown/unresearched species which nobody barely anything about.
 - Read below to understand how to steal and raise a brainrot.
@@ -20,3 +22,8 @@
 - **Teenager**: Your brainrot becomes a Teenager once it has been fed 15 stars/moons.
 - **Adult**: Your brainrot becomes an Adult once it has been fed 20 stars/moons.
 - Once a brainrot becomes an adult, it will remain at that age forever as brainrots are an immortal species.
+- You can own more than one of the same brainrot, but it will be treated as a separate brainrot, you can distinguish which one is which by the roman numeral after their name in the Brainrot Lair.
+
+**some fun stuff i wanted to throw into the description**
+- DID YOU KNOW: at January 19, 2038, 03:14:07 UTC, this mod will not work properly as it relies on Unix Timestamp (this is assuming you dont upgrade your device to a newer one.)
+- DID YOU KNOW (part 2): after earning roughly 2.8 trillion brainrots, trying to earn another brainrot will cause your game to freeze, as it relies on generating random 8 character strings.

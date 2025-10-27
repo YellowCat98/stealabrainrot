@@ -175,6 +175,8 @@ class $modify(InsertBrainrot, PlayLayer) {
                 {"dupe", fmt::to_string(dupeNumber)}, // the dupe key determines what number duplicate the brainrot is so it's distinguishable in brainrot display
                 {"age", "baby"},
                 {"collected-at", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
+                {"x", fmt::to_string(v->getPositionX())},
+                {"y", fmt::to_string(v->getPositionY())},
                 {"last-fed", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
                 {"found-in", fmt::to_string(m_level->m_levelID.value())},
                 {"stars", fmt::to_string(utilities::random::randint(0, 2))} // PIECE OF LORE BEHIND BRAINROTS: the only reason you see them wandering in levels is because their previous owners neglected them, which is why they have little to no stars.

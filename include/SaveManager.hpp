@@ -33,6 +33,7 @@ public:
     void commitCollectedChanges();
     GamingComplexMap getAllCollectedBrainrots();
     MapData getCollectedBrainrot(const std::string& brainrotID);
+    void removeCollectedChange(const std::string& token);
     std::vector<std::string> getAllTokens(); // this function helps so that you dont get a token you already had, its a low chance but oh well
 
     GamingComplexMap collectedUncommitted;

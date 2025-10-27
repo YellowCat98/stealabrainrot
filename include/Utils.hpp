@@ -31,4 +31,6 @@ namespace utilities {
     Brainrot::Age stringToAge(const std::string& age);
     std::string ageToString(Brainrot::Age age);
     Brainrot::Age getBrainrotAge(unsigned int currentStars);
+    
+    std::string toRoman(int num);
 }

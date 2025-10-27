@@ -74,3 +74,7 @@ std::vector<std::string> SaveManager::getAllTokens() {
     }
     return tokens;
 }
+
+void SaveManager::removeCollectedChange(const std::string& token) {
+    this->collectedUncommitted.erase(token);
+}

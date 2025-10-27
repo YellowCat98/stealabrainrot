@@ -30,4 +30,33 @@ $on_mod(Loaded) {
 		{"ta_ta_ta_sahur", "Ta Ta Ta Sahur"},
 		{"trulimero_trulichina", "Trulimero Trulichina"}
 	};
+
+
+	// handling runaway brainrots
+	std::vector<std::string> runawayTokens; // so that i dont iterate through getallcollectedbrainrots and remove cause apparently i shouldnt remove items while iterating
+	SaveManager::get()->getCollectedBrainrots();
+	SaveManager::get()->getCurrentSave();
+	for (const auto [k, v] : SaveManager::get()->getAllCollectedBrainrots()) { // okay HOW many times have i iterated through all the collected brainrots in this mod what the fuck (nvm its only 3 times)
+		auto lastFed = static_cast<std::time_t>(numFromString<int>(v.at("last-fed")).unwrap());
+		auto now = std::chrono::system_clock::now();
+
+		auto trueLastFed = std::chrono::system_clock::from_time_t(lastFed);
+
+		if (std::chrono::duration_cast<std::chrono::hours>(now - trueLastFed).count() >= 48) {
+			log::warn("{} {} has run away due to starvation!", BrainrotRegistry::get()->brainrotNames[v.at("id")], utilities::toRoman(numFromString<int>(v.at("dupe")).unwrap()));
+			SaveManager::get()->pushChanges(v.at("found-in"), v.at("id"), {
+				{"token", k},
+				{"x", fmt::to_string(v.at("x"))},
+				{"y", fmt::to_string(v.at("y"))}
+			});
+			runawayTokens.push_back(k);
+		}
+	}
+
+	for (auto token : runawayTokens) {
+		SaveManager::get()->removeCollectedChange(token); // im too lazy to add a removeCollectedChanges function
+	}
+
+	SaveManager::get()->commitChanges();
+	SaveManager::get()->commitCollectedChanges();
 }
