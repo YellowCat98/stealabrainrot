@@ -23,6 +23,16 @@ class $modify(InsertBrainrot, PlayLayer) {
     bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
         if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 
+        if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
+            auto scene = CCScene::get();
+            if (scene) {
+                auto baby = scene->getChildByID("brainrots"_spr);
+                if (baby) {
+                    baby->setVisible(false);
+                }
+            }
+        }
+
         if (level->m_stars == 0) return true;
 
         SaveManager::get()->getCurrentSave();
@@ -158,6 +168,11 @@ class $modify(InsertBrainrot, PlayLayer) {
     }
 
     void levelComplete() {
+
+        if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
+            CCScene::get()->getChildByID("brainrots"_spr)->setVisible(true);
+        }
+
         SaveManager::get()->getCollectedBrainrots();
         SaveManager::get()->getCurrentSave();
         for (const auto [k, v] : m_fields->m_collected) {
@@ -207,9 +222,32 @@ class $modify(InsertBrainrot, PlayLayer) {
 
             SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
         }
+
+        if (SaveManager::get()->collectedUncommitted.size() == 1) {
+            FLAlertLayer::create("First brainrot!",
+                "You have earned your first brainrot!\n"
+                "It has been auto equipped and the stars earned from this level fed to it.",
+                "Yay!"
+            )->show();
+            Mod::get()->setSavedValue<std::string>("equipped-brainrot", SaveManager::get()->collectedUncommitted.begin()->first);
+        }
+
         SaveManager::get()->commitCollectedChanges();
         SaveManager::get()->commitChanges();
 
         PlayLayer::levelComplete();
+    }
+
+    void onQuit() {
+        PlayLayer::onQuit();
+        if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
+            queueInMainThread([]() {
+                auto scene = CCScene::get();
+                if (!scene) return;
+                auto baby = scene->getChildByID("brainrots"_spr);
+                if (!baby) return;
+                baby->setVisible(true);
+            });
+        }
     }
 };

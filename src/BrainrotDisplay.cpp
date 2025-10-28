@@ -13,10 +13,7 @@ bool BrainrotDisplay::init() {
     bg->setID("background");
     bg->setRotation(utilities::random::randint(0, 1) ? 180.0f : bg->getRotation()); // basically a 1/2 chance the background is rotated
 
-    auto shownBrainrots = SceneManager::get()->getPersistedNodes();
-    for (auto& node : shownBrainrots) {
-        node->setVisible(false); // Should you be in the brainrot display, thou brainrot will not be visible.
-    }
+    CCScene::get()->getChildByID("brainrots"_spr)->setVisible(false);
 
     auto brainrots = CCMenu::create();
     brainrots->setPosition({0.0f, 0.0f});
@@ -103,6 +100,7 @@ bool BrainrotDisplay::init() {
 
 void BrainrotDisplay::keyBackClicked() {
     CCDirector::get()->popSceneWithTransition(0.5f, kPopTransitionFade);
+
 }
 
 void BrainrotDisplay::onEnter() {
@@ -113,6 +111,10 @@ void BrainrotDisplay::onEnter() {
 void BrainrotDisplay::onExit() {
     CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
     CCLayer::onExit();
+
+    queueInMainThread([]() {
+        CCScene::get()->getChildByID("brainrots"_spr)->setVisible(true);
+    }); // not doing this causes a nullptr error
 }
 
 bool BrainrotDisplay::ccTouchBegan(CCTouch* touch, CCEvent* event) {

@@ -35,6 +35,11 @@ class $modify(MyMenuLayer, MenuLayer) {
         }
         addedBrainrots = true;
 		*/
+
+        auto brainrotMenu = CCNode::create();
+        brainrotMenu->setContentSize(CCDirector::get()->getWinSize());
+        brainrotMenu->setID("brainrots"_spr);
+
         SaveManager::get()->getCollectedBrainrots();
         switch (Mod::get()->getSettingValue<int>("brainrots-display")) { // you no longer have to do int64_t
             case 0: {
@@ -42,8 +47,8 @@ class $modify(MyMenuLayer, MenuLayer) {
                 if (brainrots.empty()) break;
                 for (const auto [k, v] : brainrots) {
                     auto brainrot = Brainrot::create(v.at("id"), k, utilities::stringToAge(v.at("age")), "");
-                    brainrot->setID(fmt::format("{}{}-{}", ""_spr, v.at("id"), k));
-                    SceneManager::get()->keepAcrossScenes(brainrot);
+                    brainrot->setID(fmt::format("{}-{}", v.at("id"), k));
+                    brainrotMenu->addChild(brainrot);
                 }
                 break;
             }
@@ -53,12 +58,13 @@ class $modify(MyMenuLayer, MenuLayer) {
                 auto brainrotID = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
                 if (!brainrots.contains(brainrotID)) break;
                 auto brainrot = Brainrot::create(brainrots[brainrotID].at("id"), brainrotID, utilities::stringToAge(SaveManager::get()->getCollectedBrainrot(brainrotID).at("age")), "");
-                brainrot->setID(fmt::format("{}{}", ""_spr, brainrotID));
-                SceneManager::get()->keepAcrossScenes(brainrot);
+                brainrot->setID(fmt::format("{}", brainrotID));
+                brainrotMenu->addChild(brainrot);
                 break;
             }
             default: break; // anything after 1 will just be invisible!
         }
+        SceneManager::get()->keepAcrossScenes(brainrotMenu);
 
         addedBrainrots = true;
 		return true;
