@@ -224,11 +224,13 @@ class $modify(InsertBrainrot, PlayLayer) {
         }
 
         if (SaveManager::get()->collectedUncommitted.size() == 1) {
-            FLAlertLayer::create("First brainrot!",
+            auto alert = FLAlertLayer::create("First brainrot!",
                 "You have earned your first brainrot!\n"
                 "It has been auto equipped and the stars earned from this level fed to it.",
                 "Yay!"
-            )->show();
+            );
+            alert->setTouchPriority(-600);
+            alert->show();
             Mod::get()->setSavedValue<std::string>("equipped-brainrot", SaveManager::get()->collectedUncommitted.begin()->first);
         }
 
