@@ -1,1 +1,1 @@
-Edit this file to change your mod's support info, or delete it if you don't need it.
+if you like this mod and want to support, my ko-fi is **https://ko-fi.com/yellowcat98**!!

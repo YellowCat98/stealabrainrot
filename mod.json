@@ -11,6 +11,7 @@
 	"version": "v1.0.0",
 	"developer": "YellowCat98",
 	"description": "STEAL a brainrot",
+	"tags": ["modtober25"],
 	"dependencies": {
 		"geode.node-ids": ">=v1.20.0"
 	},
