@@ -9,11 +9,21 @@ class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
 		if (!MenuLayer::init()) return false;
 
-        auto menu = this->getChildByID("bottom-menu");
+        auto menu = this->getChildByID(utilities::random::choice<std::string>({"bottom-menu", "side-menu", "right-side-menu"}));
         menu->addChild(CCMenuItemExt::createSpriteExtraWithFilename("player456_smile.png"_spr, 1.0f, [](CCMenuItemSpriteExtra*) {
             CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, BrainrotDisplay::scene()));
         }));
         menu->updateLayout();
+
+        static bool informedRunaway = false;
+        log::info("{}", informedRunaway);
+        log::info("{}", BrainrotRegistry::get()->brainrotsRanAway);
+        if (!informedRunaway) {
+            if (BrainrotRegistry::get()->brainrotsRanAway) {
+                Notification::create("It appears one or more brainrots have ran away...", NotificationIcon::Warning)->show();
+            }
+            informedRunaway = true;
+        }
 
 		static bool addedBrainrots = false;
         if (addedBrainrots) return true;

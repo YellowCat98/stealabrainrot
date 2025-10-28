@@ -61,6 +61,18 @@ $on_mod(Loaded) {
 
 	for (auto token : runawayTokens) {
 		SaveManager::get()->removeCollectedChange(token); // im too lazy to add a removeCollectedChanges function
+		// or maybe NOT i am not lazy to add a removeCollectedChanges function
+	}
+	bool found = false;
+	for (const auto [k, v] : SaveManager::get()->uncommitted) {
+		for (const auto [cock, vee] : SaveManager::get()->brainrotInLevel(k)) {
+			if (vee.contains("token")) {
+				BrainrotRegistry::get()->brainrotsRanAway = true;
+				found = true;
+				break;
+			}
+			if (found) break;
+		}
 	}
 
 	SaveManager::get()->commitChanges();
