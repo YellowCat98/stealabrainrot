@@ -73,6 +73,7 @@ bool BrainrotDisplay::init() {
         #endif
         FLAlertLayer::create(
             utilities::random::randint(0, 1) ? "Info" : "Information",
+            "This is the brainrots lair.\n"
             "Here lies all your collected brainrots.\n"
             "Duplicate brainrots are distinguished via the roman numeral after their name.\n"
             "The brainrot whose name is green is the current equipped brainrot.\n"

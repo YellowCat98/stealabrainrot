@@ -10,9 +10,11 @@ class $modify(MyMenuLayer, MenuLayer) {
 		if (!MenuLayer::init()) return false;
 
         auto menu = this->getChildByID(utilities::random::choice<std::string>({"bottom-menu", "side-menu", "right-side-menu"}));
-        menu->addChild(CCMenuItemExt::createSpriteExtraWithFilename("player456_smile.png"_spr, 1.0f, [](CCMenuItemSpriteExtra*) {
+        auto btn = CCMenuItemExt::createSpriteExtraWithFilename("player456_smile.png"_spr, 1.0f, [](CCMenuItemSpriteExtra*) {
             CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, BrainrotDisplay::scene()));
-        }));
+        });
+        btn->setID("brainrot-lair"_spr);
+        menu->addChild(btn);
         menu->updateLayout();
 
         static bool informedRunaway = false;
