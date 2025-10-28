@@ -28,4 +28,4 @@
 
 **some fun stuff i wanted to throw into the description**
 - DID YOU KNOW: at January 19, 2038, 03:14:07 UTC, this mod will not work properly as it relies on Unix Timestamp (this is assuming you dont upgrade your device to a newer one.)
-- DID YOU KNOW (part 2): after earning roughly 2.8 trillion brainrots, trying to earn another brainrot will cause your game to freeze, as it relies on generating random 8 character strings.
+- DID YOU KNOW (part 2): after earning roughly 2.8 trillion brainrots, trying to earn another brainrot will cause your game to freeze, as it relies on generating random 8 character strings. though realistically, your game won't be able to handle a lot of brainrots, and even if it did it would be increasingly harder to keep them all from running away.
