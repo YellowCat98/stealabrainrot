@@ -133,7 +133,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             };
             auto theChosenOne = ensureNoDupes();
             SaveManager::get()->getCurrentSave(); // push current save into memory
-            SaveManager::get()->pushChanges(fmt::to_string(m_level->m_levelID), theChosenOne, {
+            SaveManager::get()->pushChanges(fmt::to_string(m_level->m_levelID.value()), theChosenOne, {
                 {"x", fmt::to_string(pos.x)},
                 {"y", fmt::to_string(pos.y)}
             });
