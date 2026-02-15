@@ -5,21 +5,21 @@
 using namespace utilities;
 using namespace geode::prelude;
 
-float random::random(float a, float b) {
+float _random::random(float a, float b) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dist(a, b);
     return dist(gen);
 }
 
-int random::randint(int a, int b) {
+int _random::randint(int a, int b) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(a, b);
     return dist(gen);
 }
 
-std::string random::string(int length) {
+std::string _random::string(int length) {
     static const char charset[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz"
@@ -30,7 +30,7 @@ std::string random::string(int length) {
         std::string id;
         id.reserve(length);
         for (size_t i = 0; i < length; ++i) {
-            id += charset[random::randint(0, charsetSize - 1)];
+            id += charset[_random::randint(0, charsetSize - 1)];
         }
         return id;
 }

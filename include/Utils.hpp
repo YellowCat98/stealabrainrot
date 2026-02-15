@@ -5,7 +5,7 @@
 #define IS_BETWEEN(a, x, b) a <= x && x < b
 
 namespace utilities {
-    namespace random {
+    namespace _random {
         float random(float a, float b);
         int randint(int a, int b);
         

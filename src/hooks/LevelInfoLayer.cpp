@@ -10,12 +10,12 @@ class $modify(InformOfBrainrot, LevelInfoLayer) {
         SaveManager::get()->getCurrentSave();
         for (const auto [k, v] : SaveManager::get()->brainrotInLevel(fmt::to_string(level->m_levelID.value()))) {
             auto alert = FLAlertLayer::create(
-                utilities::random::choice<std::string>({"Hmm...", "What's this?", "Something is lurking..."}).c_str(),
+                utilities::_random::choice<std::string>({"Hmm...", "What's this?", "Something is lurking..."}).c_str(),
                 fmt::format(
                     "You sense a strange being lurking around in this level.\n{}"
                     "You are filled with {}.",
                     v.contains("token") ? "Could it be... a lost brainrot?\n" : "",
-                    utilities::random::choice<std::string>({"the power of catching brainrots.", "the need to become the brainrot master.", "the desire to learn piano."})
+                    utilities::_random::choice<std::string>({"the power of catching brainrots.", "the need to become the brainrot master.", "the desire to learn piano."})
                 ),
                 "okay..?"
             );

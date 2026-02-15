@@ -9,7 +9,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
 		if (!MenuLayer::init()) return false;
 
-        auto menu = this->getChildByID(utilities::random::choice<std::string>({"bottom-menu", "side-menu", "right-side-menu"}));
+        auto menu = this->getChildByID(utilities::_random::choice<std::string>({"bottom-menu", "side-menu", "right-side-menu"}));
         auto btn = CCMenuItemExt::createSpriteExtraWithFilename("player456_smile.png"_spr, 1.0f, [](CCMenuItemSpriteExtra*) {
             CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, BrainrotDisplay::scene()));
         });

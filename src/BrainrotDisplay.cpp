@@ -11,7 +11,7 @@ bool BrainrotDisplay::init() {
 
     auto bg = MenuGameLayer::create();
     bg->setID("background");
-    bg->setRotation(utilities::random::randint(0, 1) ? 180.0f : bg->getRotation()); // basically a 1/2 chance the background is rotated
+    bg->setRotation(utilities::_random::randint(0, 1) ? 180.0f : bg->getRotation()); // basically a 1/2 chance the background is rotated
 
     CCScene::get()->getChildByID("brainrots"_spr)->setVisible(false);
 
@@ -42,7 +42,7 @@ bool BrainrotDisplay::init() {
     auto backMenu = CCMenu::create();
     backMenu->setID("back-menu");
     
-    auto backBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName(utilities::random::randint(0, 1) ? "GJ_arrow_01_001.png" : "GJ_arrow_02_001.png"), [this](CCObject*) {
+    auto backBtn = CCMenuItemExt::createSpriteExtra(CCSprite::createWithSpriteFrameName(utilities::_random::randint(0, 1) ? "GJ_arrow_01_001.png" : "GJ_arrow_02_001.png"), [this](CCObject*) {
         this->keyBackClicked();
     });
     backMenu->addChild(backBtn);
@@ -72,14 +72,14 @@ bool BrainrotDisplay::init() {
             bool runningOnLinux = false;
         #endif
         FLAlertLayer::create(
-            utilities::random::randint(0, 1) ? "Info" : "Information",
+            utilities::_random::randint(0, 1) ? "Info" : "Information",
             "This is the brainrots lair.\n"
             "Here lies all your collected brainrots.\n"
             "Duplicate brainrots are distinguished via the roman numeral after their name.\n"
             "The brainrot whose name is green is the current equipped brainrot.\n"
             "Press on a brainrot to view information about it and equip it.\n",
             // ok you know i have to do the random thingy here too!
-            utilities::random::choice<std::string>({"Understood!", "Wha..?", "i think i got it!", "OK", "Absolute OK!", (runningOnLinux ? "i use arch btw" : "i use NT btw"), "Pay 250 Robux to unlock VIP"}).c_str()
+            utilities::_random::choice<std::string>({"Understood!", "Wha..?", "i think i got it!", "OK", "Absolute OK!", (runningOnLinux ? "i use arch btw" : "i use NT btw"), "Pay 250 Robux to unlock VIP"}).c_str()
         )->show();
     });
 
@@ -121,7 +121,7 @@ void BrainrotDisplay::onExit() {
 bool BrainrotDisplay::ccTouchBegan(CCTouch* touch, CCEvent* event) {
     auto location = touch->getLocation();
     CCObject* obj = nullptr;
-    CCARRAY_FOREACH(brainrots->getChildren(), obj) {
+    for (CCNode* obj : brainrots->getChildrenExt()) {
         auto brainrot = static_cast<Brainrot*>(obj);
         if (!brainrot->isVisible()) continue;
 
@@ -169,8 +169,8 @@ void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
                         "Are you sure you want to equip {} {}?",
                         BrainrotRegistry::get()->brainrotNames[brainrotData.at("id")], utilities::toRoman(numFromString<int>(brainrotData.at("dupe")).unwrap())
                     ),
-                    utilities::random::choice<std::string>({"No!!", "i missclicked", "surely not", "i do not agree", "no, smh.."}).c_str(),
-                    utilities::random::choice<std::string>({"OK", "Okay", "Duh??", "absolutely yes", "why would i click the button duh??", "Alright!", "k", "alr", fmt::format("{} says absolutely!", GJAccountManager::get()->m_username)}).c_str(),
+                    utilities::_random::choice<std::string>({"No!!", "i missclicked", "surely not", "i do not agree", "no, smh.."}).c_str(),
+                    utilities::_random::choice<std::string>({"OK", "Okay", "Duh??", "absolutely yes", "why would i click the button duh??", "Alright!", "k", "alr", fmt::format("{} says absolutely!", GJAccountManager::get()->m_username)}).c_str(),
                     [=](FLAlertLayer*, bool btn2) {
                         if (btn2) {
                                 if (SaveManager::get()->getAllCollectedBrainrots().contains(previousToken)) {

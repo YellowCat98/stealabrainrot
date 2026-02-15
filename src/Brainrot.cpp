@@ -31,7 +31,7 @@ bool Brainrot::init(const std::string& brainrotID, const std::string& token, Bra
 
     speed = 100.0f;
 
-    float angle = utilities::random::random(0.0f, 1.0f) * 2 * std::numbers::pi;
+    float angle = utilities::_random::random(0.0f, 1.0f) * 2 * std::numbers::pi;
     velocity = ccp(std::cosf(angle) * speed, std::sinf(angle) * speed);
 
     if (!nameAboveHead.empty()) {
