@@ -51,6 +51,7 @@ void SaveManager::pushCollectedChanges(const std::string& brainrotID, SaveManage
 void SaveManager::commitCollectedChanges() {
     Mod::get()->setSavedValue<GamingComplexMap>("collected-brainrots", this->collectedUncommitted);
     this->getCollectedCalled = false;
+    this->collectedUncommitted.clear();
 }
 
 SaveManager::GamingComplexMap SaveManager::getAllCollectedBrainrots() {
@@ -59,10 +60,8 @@ SaveManager::GamingComplexMap SaveManager::getAllCollectedBrainrots() {
 
 SaveManager::MapData SaveManager::getCollectedBrainrot(const std::string& brainrotID) {
     auto allBrainrots = this->getAllCollectedBrainrots();
-    for (const auto [k, v] : allBrainrots) {
-        if (k == brainrotID) return v;
-    }
-    return {}; // brainrot of that ID was not found.
+    if (allBrainrots.contains(brainrotID)) return allBrainrots.at(brainrotID);
+    return {};
 }
 
 std::vector<std::string> SaveManager::getAllTokens() {
