@@ -84,7 +84,7 @@ class $modify(MyMenuLayer, MenuLayer) {
             }
             default: break; // anything after 1 will just be invisible!
         }
-        SceneManager::get()->keepAcrossScenes(brainrotMenu);
+        OverlayManager::get()->addChild(brainrotMenu);
 
         addedBrainrots = true;
 		return true;
