@@ -13,13 +13,13 @@ namespace utilities {
         // do i even need this function
         template<typename T>
         T choice(const std::vector<T>& vec) {
-            int i = random::randint(0, (static_cast<int>(vec.size()) - 1));
+            int i = _random::randint(0, (static_cast<int>(vec.size()) - 1));
             return vec[i];
         }
 
         template<typename K, typename V>
         std::pair<K, V> choiceMap(std::unordered_map<K, V> vec) {
-            int i = random::randint(0, (static_cast<int>(vec.size()) - 1));
+            int i = _random::randint(0, (static_cast<int>(vec.size()) - 1));
             auto it = vec.begin();
             std::advance(it, i);
             return *it;
