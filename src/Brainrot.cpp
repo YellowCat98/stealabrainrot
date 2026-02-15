@@ -58,7 +58,7 @@ void Brainrot::update(float dt) {
     
 
     float maxAngleChange = 15.0f * (std::numbers::pi / 180.0f);
-    float angleChange = utilities::random::random(-maxAngleChange, maxAngleChange);
+    float angleChange = utilities::_random::random(-maxAngleChange, maxAngleChange);
 
     float currentAngle = std::atan2f(velocity.y, velocity.x);
     currentAngle += angleChange;

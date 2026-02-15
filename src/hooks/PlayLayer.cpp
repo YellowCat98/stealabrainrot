@@ -82,7 +82,7 @@ class $modify(InsertBrainrot, PlayLayer) {
         else if (category == 3) duration = 60.0f;
         else duration = 120.0f; // in platformer levels, brainrots can only spawn within the first 120 seconds.
 
-        m_fields->m_whenToPlace = 10.0f + utilities::random::random(0.0f, 1.0f) * (duration - 10.0f);
+        m_fields->m_whenToPlace = 10.0f + utilities::_random::random(0.0f, 1.0f) * (duration - 10.0f);
 
         return true;
     }
@@ -111,7 +111,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             
             std::function<std::string()> ensureNoDupes = [&]() {
                 static int dupes = 0;
-                auto theChosenOne = utilities::random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
+                auto theChosenOne = utilities::_random::choiceMap<std::string, std::string>(BrainrotRegistry::get()->brainrots).first;
 
                 bool duplicate = false;
 
@@ -182,7 +182,7 @@ class $modify(InsertBrainrot, PlayLayer) {
                 token = m_fields->m_runawayBrainrots.at(k).first;
             } else {
                 do {
-                    token = utilities::random::string(8);
+                    token = utilities::_random::string(8);
                 } while (std::find(tokens.begin(), tokens.end(), token) != tokens.end());
             }
 
@@ -214,7 +214,7 @@ class $modify(InsertBrainrot, PlayLayer) {
                     {"y", fmt::to_string(v->getPositionY())},
                     {"last-fed", fmt::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))},
                     {"found-in", fmt::to_string(m_level->m_levelID.value())},
-                    {"stars", fmt::to_string(utilities::random::randint(0, 2))} // PIECE OF LORE BEHIND BRAINROTS: the only reason you see them wandering in levels is because their previous owners neglected them, which is why they have little to no stars.
+                    {"stars", fmt::to_string(utilities::_random::randint(0, 2))} // PIECE OF LORE BEHIND BRAINROTS: the only reason you see them wandering in levels is because their previous owners neglected them, which is why they have little to no stars.
                 };
             }
 
