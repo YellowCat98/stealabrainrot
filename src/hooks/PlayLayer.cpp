@@ -170,7 +170,7 @@ class $modify(InsertBrainrot, PlayLayer) {
     void levelComplete() {
 
         if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
-            CCScene::get()->getChildByID("brainrots"_spr)->setVisible(true);
+            OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(true);
         }
 
         SaveManager::get()->getCollectedBrainrots();
@@ -244,7 +244,7 @@ class $modify(InsertBrainrot, PlayLayer) {
         PlayLayer::onQuit();
         if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
             queueInMainThread([]() {
-                auto scene = CCScene::get();
+                auto scene = OverlayManager::get();
                 if (!scene) return;
                 auto baby = scene->getChildByID("brainrots"_spr);
                 if (!baby) return;

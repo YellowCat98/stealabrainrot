@@ -50,15 +50,15 @@ $on_mod(Loaded) {
 
 		std::tm end_tm = {};
 		end_tm.tm_year = 2026 - 1900;
-		end_tm.tm_mon = 2;
-		end_tm.tm_mday = 19;
+		end_tm.tm_mon = 1;
+		end_tm.tm_mday = 15;
 		std::time_t end_ts = std::mktime(&end_tm);
 
 		if (lastFed >= start_ts && lastFed <= end_ts) {
 			if (v.at("age") != "tiktok-user") {
 				BrainrotRegistry::get()->returnBrainrotsRanAway = true;
 				auto tmp = v;
-				tmp["last-fed"] = utils::numToString<std::chrono::system_clock::time_point>(now);
+				tmp["last-fed"] = utils::numToString<std::time_t>(std::chrono::system_clock::to_time_t(now));
 				SaveManager::get()->pushCollectedChanges(k, tmp);
 				continue;
 			}

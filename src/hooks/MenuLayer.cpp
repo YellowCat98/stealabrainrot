@@ -27,21 +27,24 @@ class $modify(MyMenuLayer, MenuLayer) {
             informedRunaway = true;
         }
 
-        static bool informedReturnedBrainrots = false;
-        if (!informedReturnedBrainrots) {
-            if (BrainrotRegistry::get()->returnBrainrotsRanAway) {
-                auto alert = FLAlertLayer::create(
-                    "Brainrot Return",
-                    "Due to update 2.2081,\n"
-                    "you were unable to feed your brainrots.\n"
-                    "Your collected brainrots have understood your reason and returned.\n"
-                    "Brainrots that have ran away before the update will not return.\n"
-                    "TikTok User brainrots have decided not to return.\n"
-                    "You shall collect them again.",
-                    "OK"
-                );
-                alert->m_scene = this;
-                alert->show();
+        if (!Mod::get()->setSavedValue<bool>("informed-returning-brainrot", true)) {
+            static bool informedReturnedBrainrots = false;
+            if (!informedReturnedBrainrots) {
+                if (BrainrotRegistry::get()->returnBrainrotsRanAway) {
+                    auto alert = FLAlertLayer::create(
+                        "Brainrot Return",
+                        "Due to update 2.2081,\n"
+                        "you were unable to feed your brainrots.\n"
+                        "Your collected brainrots have understood your reason and returned.\n"
+                        "Brainrots that have ran away before the update will not return.\n"
+                        "TikTok User brainrots have decided not to return.\n"
+                        "You shall collect them again.",
+                        utilities::_random::choice<std::string>({"are you fr rn", "OK", "yay!", "the", "d'accord"}).c_str()
+                    );
+                    alert->m_scene = this;
+                    alert->show();
+                }
+                informedReturnedBrainrots = true;
             }
         }
 

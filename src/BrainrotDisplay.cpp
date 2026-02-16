@@ -13,7 +13,7 @@ bool BrainrotDisplay::init() {
     bg->setID("background");
     bg->setRotation(utilities::_random::randint(0, 1) ? 180.0f : bg->getRotation()); // basically a 1/2 chance the background is rotated
 
-    CCScene::get()->getChildByID("brainrots"_spr)->setVisible(false);
+    OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(false);
 
     auto brainrots = CCMenu::create();
     brainrots->setPosition({0.0f, 0.0f});
@@ -114,7 +114,7 @@ void BrainrotDisplay::onExit() {
     CCLayer::onExit();
 
     queueInMainThread([]() {
-        CCScene::get()->getChildByID("brainrots"_spr)->setVisible(true);
+        OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(false);
     }); // not doing this causes a nullptr error
 }
 
