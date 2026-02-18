@@ -28,6 +28,8 @@
 
 ## Note:
 - this mod has settings btw
+- in the case of a GD update releasing that breaks Geode (hence making it impossible to feed brainrots.), your brainrots will use their IQ of 5 and will not run away.
+- (however TikTok User brainrots have an IQ of PI. They will not return)
 
 
 **some fun stuff i wanted to throw into the description**
