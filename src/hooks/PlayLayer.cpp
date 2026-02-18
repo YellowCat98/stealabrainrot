@@ -75,7 +75,11 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     bool brainrotAssignment() {
         int category = m_level->m_levelLength;
+        log::info("category: {}", category);
         float duration = 0.0f;
+
+        if (m_level->m_levelType == GJLevelType::Main) duration = 60.0f; // assume duration is 60 seconds for main keveks
+        log::info("duration: {}", duration);
         if (category == 0) return true; // brainrots cannot be collected on tiny or short levels.
         else if (category == 1) return true;
         else if (category == 2) duration = 30.0f;
@@ -83,7 +87,7 @@ class $modify(InsertBrainrot, PlayLayer) {
         else duration = 120.0f; // in platformer levels, brainrots can only spawn within the first 120 seconds.
 
         m_fields->m_whenToPlace = 10.0f + utilities::_random::random(0.0f, 1.0f) * (duration - 10.0f);
-
+        
         return true;
     }
 
@@ -96,10 +100,11 @@ class $modify(InsertBrainrot, PlayLayer) {
 
     // this is the code that runs every frame if on assignment mode
     void brainrotAssignmentUpdate(float dt) {
+        if (m_fields->m_whenToPlace <= 0.0f) return;
         if (m_fields->m_triggered) return;
 
         m_fields->m_elapsed += dt;
-
+        log::info("m_fields->m_whenToPlace: {}", m_fields->m_whenToPlace);
         if (m_fields->m_elapsed >= m_fields->m_whenToPlace) {
             m_fields->m_triggered = true;
 
