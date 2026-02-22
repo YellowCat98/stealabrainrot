@@ -18,8 +18,6 @@ class $modify(MyMenuLayer, MenuLayer) {
         menu->updateLayout();
 
         static bool informedRunaway = false;
-        log::info("{}", informedRunaway);
-        log::info("{}", BrainrotRegistry::get()->brainrotsRanAway);
         if (!informedRunaway) {
             if (BrainrotRegistry::get()->brainrotsRanAway) {
                 Notification::create("It appears one or more brainrots have ran away...", NotificationIcon::Warning)->show();

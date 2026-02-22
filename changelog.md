@@ -1,3 +1,7 @@
+# 1.0.0-beta.4
+- Added source code to mod metadata
+- Removed unnecessary logs
+
 # 1.0.0-beta.3
 - 2.2081 support
 - Brainrots that have run away will return due to the GD update making it impossible to feed them.
