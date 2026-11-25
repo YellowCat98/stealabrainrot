@@ -16,6 +16,7 @@ bool Brainrot::init(const std::string& brainrotID, const std::string& token, Bra
         texture->getContentSize().width,
         texture->getContentSize().height
     ));
+    this->setAnchorPoint({0.5f, 0.5f});
 
     float scale = 0.0f;
     switch (age) {
@@ -27,16 +28,17 @@ bool Brainrot::init(const std::string& brainrotID, const std::string& token, Bra
     }
     this->setScale(scale);
 
-    this->setAnchorPoint({0.0f, 1.0f});
-
     speed = 100.0f;
+    step = 0.0f;
+    maxAngleChange = 90.0f * (std::numbers::pi / 180.0f);
+    angleChange = utilities::_random::random(-maxAngleChange, maxAngleChange);
 
     float angle = utilities::_random::random(0.0f, 1.0f) * 2 * std::numbers::pi;
     velocity = ccp(std::cosf(angle) * speed, std::sinf(angle) * speed);
 
     if (!nameAboveHead.empty()) {
         auto label = CCLabelBMFont::create(nameAboveHead.c_str(), "bigFont.fnt");
-        label->setAnchorPoint({{0.5f, 0.0f}});
+        label->setAnchorPoint({0.5f, 0.0f});
         label->setPosition({
             this->getContentWidth() / 2,
             this->getContentHeight()
@@ -55,24 +57,35 @@ void Brainrot::setLabelColor(const ccColor3B& col) {
 
 void Brainrot::update(float dt) {
     auto winSize = CCDirector::get()->getWinSize();
-    
+    step += dt;
 
-    float maxAngleChange = 15.0f * (std::numbers::pi / 180.0f);
-    float angleChange = utilities::_random::random(-maxAngleChange, maxAngleChange);
-
-    float currentAngle = std::atan2f(velocity.y, velocity.x);
-    currentAngle += angleChange;
-
-    velocity = ccp(std::cosf(currentAngle) * speed, std::sinf(currentAngle) * speed);
+    if (Mod::get()->getSettingValue<float>("brainrot-wandering-step") < step) {
+        step = 0.0f;
+        float currentAngle = std::atan2f(velocity.y, velocity.x);
+        currentAngle += utilities::_random::random(-maxAngleChange, maxAngleChange);
+        velocity = ccp(std::cosf(currentAngle) * speed, std::sinf(currentAngle) * speed);
+    }
 
     auto newPos = this->getPosition() + ccpMult(velocity, dt);
 
-    if (newPos.x < 0 || newPos.x > winSize.width)
-        velocity.x = -velocity.x;
-    if (newPos.y < 0 || newPos.y > winSize.height)
-        velocity.y = -velocity.y;
-    
-    this->setPosition(this->getPosition() + ccpMult(velocity, dt));
+    if (newPos.x < 0) {
+        newPos.x = 0;
+        velocity.x = fabsf(velocity.x);
+    }
+    if (newPos.x > winSize.width) {
+        newPos.x = winSize.width;
+        velocity.x = -fabsf(velocity.x);
+    }
+    if (newPos.y < 0) {
+        newPos.y = 0;
+        velocity.y = fabsf(velocity.y);
+    }
+    if (newPos.y > winSize.height) {
+        newPos.y = winSize.height;
+        velocity.y = -fabsf(velocity.y);
+    }
+
+    this->setPosition(newPos);
 }
 
 Brainrot* Brainrot::create(const std::string& brainrotID, const std::string& token, Brainrot::Age age, const std::string& nameAboveHead) {

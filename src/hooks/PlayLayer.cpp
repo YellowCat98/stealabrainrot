@@ -18,18 +18,22 @@ class $modify(InsertBrainrot, PlayLayer) {
         std::unordered_map<std::string, CCSprite*> m_collectibles;
         std::unordered_map<std::string, CCSprite*> m_collected;
         std::unordered_map<std::string, std::pair<std::string, SaveManager::MapData>> m_runawayBrainrots; // { brainrotid: {brainrottoken, brainrotData}}
+
+        ~Fields() {
+        auto scene = OverlayManager::get();
+        auto baby = scene->getChildByID("brainrots"_spr);
+        if (baby) baby->setVisible(true);
+        }
     };
 
-    bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
-        if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
+    bool init(GJGameLevel* level, bool dontCreateObjects) {
+        if (!PlayLayer::init(level, dontCreateObjects)) return false;
 
-        if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
-            auto scene = CCScene::get();
-            if (scene) {
-                auto baby = scene->getChildByID("brainrots"_spr);
-                if (baby) {
-                    baby->setVisible(false);
-                }
+        if (Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
+            auto scene = OverlayManager::get();
+            auto baby = scene->getChildByID("brainrots"_spr);
+            if (baby) {
+                baby->setVisible(false);
             }
         }
 
@@ -225,7 +229,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
         }
 
-        if (SaveManager::get()->collectedUncommitted.size() == 1) {
+        if (SaveManager::get()->collectedUncommitted.size() < 1) {
             auto alert = FLAlertLayer::create("First brainrot!",
                 "You have earned your first brainrot!\n"
                 "It has been auto equipped and the stars earned from this level fed to it.",
@@ -240,18 +244,5 @@ class $modify(InsertBrainrot, PlayLayer) {
         SaveManager::get()->commitChanges();
 
         PlayLayer::levelComplete();
-    }
-
-    void onQuit() {
-        PlayLayer::onQuit();
-        if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
-            queueInMainThread([]() {
-                auto scene = OverlayManager::get();
-                if (!scene) return;
-                auto baby = scene->getChildByID("brainrots"_spr);
-                if (!baby) return;
-                baby->setVisible(true);
-            });
-        }
     }
 };

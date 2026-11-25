@@ -1,14 +1,14 @@
 {
-	"geode": "5.0.0-beta.4",
+	"geode": "6.0.0",
 	"gd": {
-		"win": "2.2081",
-		"android": "2.2081",
-		"mac": "2.2081",
-		"ios": "2.2081"
+		"win": "2.2091",
+		"android": "2.2091",
+		"mac": "2.2091",
+		"ios": "2.2091"
 	},
 	"id": "yellowcat98.have_you_ever_stole_a_brainrot",
 	"name": "Steal a Brainrot",
-	"version": "v1.0.0-beta.4",
+	"version": "v1.0.0",
 	"developer": "YellowCat98",
 	"description": "STEAL a brainrot",
 	"tags": ["modtober25", "joke", "offline"],
@@ -28,20 +28,28 @@
 			"name": "Brainrots wandering",
 			"type": "int",
 			"default": 0,
-			"description": "0: All collected brainrots will wander around the screen.\n1: Only your selected brainrot will wander around the screen.\n2: No brainrots will wander around the screen."
-			
+			"description": "0: All collected brainrots will wander around the screen.\n1: Only your selected brainrot will wander around the screen.\n2: No brainrots will wander around the screen.",
+			"requires-restart": true
 		},
 		"brainrots-in-playlayer": {
-			"name": "Brainrots while playing",
+			"name": "Hide brainrots while playing",
 			"type": "bool",
-			"default": false,
+			"default": true,
 			"description": "If true, hides your collected brainrots while playing a level.\nThis setting has no effect if the \"Brainrots Wandering\" setting is set to \"2\"."
 		},
 		"brainrots-in-editor": {
-			"name": "Brainrots in editor",
+			"name": "Hide brainrots while in editor",
 			"type": "bool",
 			"default": false,
 			"description": "If true, hides your collected brainrots while in the editor.\nThis setting has no effect if the \"Brainrots Wandering\" setting is set to \"2\"."
+		},
+		"brainrot-wandering-step": {
+			"name": "Brainrot direction change step (in Seconds)",
+			"type": "float",
+			"default": 1,
+			"min": 0.25,
+			"max": 25.67,
+			"description": "This controls how long wandering brainrots take to change their direction.\n0 means that every frame they'll change directions. 1 means that every one second, they change direction."
 		}
 	}
 }

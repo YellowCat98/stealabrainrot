@@ -5,7 +5,7 @@
 
 class BrainrotDisplay : public cocos2d::CCLayer { // see your great brainrots.
 private:
-    bool init();
+    bool init() override;
     void brainrotTouchCallback(Brainrot* brainrot);
 
     virtual bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;

@@ -8,10 +8,14 @@ using namespace geode::prelude;
 bool BrainrotDisplay::init() {
     if (!CCLayer::init()) return false;
     this->setKeypadEnabled(true);
+    this->setTouchEnabled(true);
 
     auto bg = MenuGameLayer::create();
     bg->setID("background");
     bg->setRotation(utilities::_random::randint(0, 1) ? 180.0f : bg->getRotation()); // basically a 1/2 chance the background is rotated
+    bg->setTouchEnabled(false);
+    bg->setKeypadEnabled(false); // robtop did not intend for menugamelayer to be used like this
+
 
     OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(false);
 
@@ -77,7 +81,7 @@ bool BrainrotDisplay::init() {
             "Here lies all your collected brainrots.\n"
             "Duplicate brainrots are distinguished via the roman numeral after their name.\n"
             "The brainrot whose name is green is the current equipped brainrot.\n"
-            "Press on a brainrot to view information about it and equip it.\n",
+            "Press on a brainrot to view information about it and equip it.",
             // ok you know i have to do the random thingy here too!
             utilities::_random::choice<std::string>({"Understood!", "Wha..?", "i think i got it!", "OK", "Absolute OK!", (runningOnLinux ? "i use arch btw" : "i use NT btw"), "Pay 250 Robux to unlock VIP"}).c_str()
         )->show();
@@ -101,7 +105,7 @@ bool BrainrotDisplay::init() {
 
 void BrainrotDisplay::keyBackClicked() {
     CCDirector::get()->popSceneWithTransition(0.5f, kPopTransitionFade);
-
+    OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(true);
 }
 
 void BrainrotDisplay::onEnter() {
@@ -112,15 +116,11 @@ void BrainrotDisplay::onEnter() {
 void BrainrotDisplay::onExit() {
     CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
     CCLayer::onExit();
-
-    queueInMainThread([]() {
-        OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(false);
-    }); // not doing this causes a nullptr error
 }
 
 bool BrainrotDisplay::ccTouchBegan(CCTouch* touch, CCEvent* event) {
     auto location = touch->getLocation();
-    CCObject* obj = nullptr;
+
     for (CCNode* obj : brainrots->getChildrenExt()) {
         auto brainrot = static_cast<Brainrot*>(obj);
         if (!brainrot->isVisible()) continue;
@@ -160,9 +160,13 @@ void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
             brainrotData.at("stars"),
             previousToken == token ? "Equipped" : "Not equipped"
         ),
-        "OK", "EQUIP",
-        [=](FLAlertLayer*, bool btn2) {
+        "OK", "Equip",
+        [=, this](FLAlertLayer*, bool btn2) {
             if (btn2) {
+                if (previousToken == token) {
+                    FLAlertLayer::create("Already Equipped", "This brainrot is already equipped!", utilities::_random::choice<const char*>({"aight", "OK", "i dont want to anyway, hmph!"}))->show();
+                    return;
+                }
                 createQuickPopup(
                     "Confirmation",
                     fmt::format(
@@ -171,7 +175,7 @@ void BrainrotDisplay::brainrotTouchCallback(Brainrot* brainrot) {
                     ),
                     utilities::_random::choice<std::string>({"No!!", "i missclicked", "surely not", "i do not agree", "no, smh.."}).c_str(),
                     utilities::_random::choice<std::string>({"OK", "Okay", "Duh??", "absolutely yes", "why would i click the button duh??", "Alright!", "k", "alr", fmt::format("{} says absolutely!", GJAccountManager::get()->m_username)}).c_str(),
-                    [=](FLAlertLayer*, bool btn2) {
+                    [=, this](FLAlertLayer*, bool btn2) {
                         if (btn2) {
                                 if (SaveManager::get()->getAllCollectedBrainrots().contains(previousToken)) {
                                     auto previousID = SaveManager::get()->getCollectedBrainrot(previousToken).at("id");

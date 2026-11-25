@@ -27,4 +27,7 @@ private:
     cocos2d::CCPoint velocity;
     float speed;
     cocos2d::CCLabelBMFont* label;
+    float step;
+    float angleChange;
+    float maxAngleChange;
 };

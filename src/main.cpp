@@ -44,14 +44,14 @@ $on_mod(Loaded) {
 
 		std::tm start_tm = {};
 		start_tm.tm_year = 2026 - 1900;
-		start_tm.tm_mon = 0;
+		start_tm.tm_mon = 9;
 		start_tm.tm_mday = 17;
 		std::time_t start_ts = std::mktime(&start_tm);
 
 		std::tm end_tm = {};
 		end_tm.tm_year = 2026 - 1900;
-		end_tm.tm_mon = 1;
-		end_tm.tm_mday = 15;
+		end_tm.tm_mon = 10;
+		end_tm.tm_mday = 24;
 		std::time_t end_ts = std::mktime(&end_tm);
 
 		if (lastFed >= start_ts && lastFed <= end_ts) {
