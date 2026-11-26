@@ -26,6 +26,7 @@ jobs:
         with:
           target: ${{ matrix.config.target }}
           upload: true
+          bindings: yellowcat98/geode-bindings
 
   merge:
     name: Merge

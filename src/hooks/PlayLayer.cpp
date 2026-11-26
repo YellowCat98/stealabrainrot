@@ -155,7 +155,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             if (m_fields->m_collected.contains(k)) continue;
 
             bool collisionPlayer1 = m_player1->boundingBox().intersectsRect(v->boundingBox());
-            bool collisionPlayer2 = m_player1->boundingBox().intersectsRect(v->boundingBox());
+            bool collisionPlayer2 = m_player2->boundingBox().intersectsRect(v->boundingBox());
 
             bool caughtBrainrot = collisionPlayer1 || collisionPlayer2;
             if (caughtBrainrot) {
@@ -174,7 +174,6 @@ class $modify(InsertBrainrot, PlayLayer) {
     }
 
     void levelComplete() {
-
         if (!Mod::get()->getSettingValue<bool>("brainrots-in-playlayer")) {
             OverlayManager::get()->getChildByID("brainrots"_spr)->setVisible(true);
         }
@@ -229,7 +228,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
         }
 
-        if (SaveManager::get()->collectedUncommitted.size() < 1) {
+        if (SaveManager::get()->collectedUncommitted.size() == 1) {
             auto alert = FLAlertLayer::create("First brainrot!",
                 "You have earned your first brainrot!\n"
                 "It has been auto equipped and the stars earned from this level fed to it.",

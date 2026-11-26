@@ -4,6 +4,7 @@
 - Fixed issue with brainrots not disappearing even with "Hide brainrots while playing/in editor" turned on. (also with the issue of them being reversed internally but since they did nothing it was never apparent???)
 - Fixed brainrots being unclickable in the brainrot lair, killing icons inside the brainrot lair is no longer supported due to it conflicting with the brainrots.
 - Refactored brainrots wandering mechanism, added new setting to change the time it takes for them to change direction.
+- Fixed typo in the code causing brainrots to not be able to be collected by player 2.
 
 # 1.0.0-beta.4
 - Added source code to mod metadata
