@@ -25,13 +25,13 @@ class $modify(MyMenuLayer, MenuLayer) {
             informedRunaway = true;
         }
 
-        if (!Mod::get()->setSavedValue<bool>("informed-returning-brainrot", true)) {
+        if (!Mod::get()->setSavedValue<bool>("informed-returning-brainrot-22091", true)) {
             static bool informedReturnedBrainrots = false;
             if (!informedReturnedBrainrots) {
                 if (BrainrotRegistry::get()->returnBrainrotsRanAway) {
                     auto alert = FLAlertLayer::create(
                         "Brainrot Return",
-                        "Due to update 2.2081,\n"
+                        "Due to update 2.2091,\n"
                         "you were unable to feed your brainrots.\n"
                         "Your collected brainrots have understood your reason and returned.\n"
                         "Brainrots that have ran away before the update will not return.\n"
@@ -45,49 +45,6 @@ class $modify(MyMenuLayer, MenuLayer) {
                 informedReturnedBrainrots = true;
             }
         }
-
-		static bool addedBrainrots = false;
-        if (addedBrainrots) return true;
-        /*
-		for (const auto [k, v] : BrainrotRegistry::get()->brainrots) {
-            auto brainrot = Brainrot::create(k, Brainrot::Age::Baby);
-            brainrot->allowWander(true);
-            SceneManager::get()->keepAcrossScenes(brainrot);
-        }
-        addedBrainrots = true;
-		*/
-
-        auto brainrotMenu = CCNode::create();
-        brainrotMenu->setContentSize(CCDirector::get()->getWinSize());
-        brainrotMenu->setID("brainrots"_spr);
-
-        SaveManager::get()->getCollectedBrainrots();
-        switch (Mod::get()->getSettingValue<int>("brainrots-display")) { // you no longer have to do int64_t
-            case 0: {
-                auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
-                if (brainrots.empty()) break;
-                for (const auto [k, v] : brainrots) {
-                    auto brainrot = Brainrot::create(v.at("id"), k, utilities::stringToAge(v.at("age")), "");
-                    brainrot->setID(fmt::format("{}-{}", v.at("id"), k));
-                    brainrotMenu->addChild(brainrot);
-                }
-                break;
-            }
-            case 1: {
-                auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
-                if (brainrots.empty()) break;
-                auto brainrotID = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
-                if (!brainrots.contains(brainrotID)) break;
-                auto brainrot = Brainrot::create(brainrots[brainrotID].at("id"), brainrotID, utilities::stringToAge(SaveManager::get()->getCollectedBrainrot(brainrotID).at("age")), "");
-                brainrot->setID(fmt::format("{}", brainrotID));
-                brainrotMenu->addChild(brainrot);
-                break;
-            }
-            default: break; // anything after 1 will just be invisible!
-        }
-        OverlayManager::get()->addChild(brainrotMenu);
-
-        addedBrainrots = true;
 		return true;
 	}
 };

@@ -101,3 +101,35 @@ $on_mod(Loaded) {
 	SaveManager::get()->commitChanges();
 	SaveManager::get()->commitCollectedChanges();
 }
+
+$on_game(TexturesLoaded) {
+    auto brainrotMenu = CCNode::create();
+    brainrotMenu->setContentSize(CCDirector::get()->getWinSize());
+    brainrotMenu->setID("brainrots"_spr);
+
+    SaveManager::get()->getCollectedBrainrots();
+    switch (Mod::get()->getSettingValue<int>("brainrots-display")) { // you no longer have to do int64_t
+        case 0: {
+            auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
+            if (brainrots.empty()) break;
+            for (const auto [k, v] : brainrots) {
+                auto brainrot = Brainrot::create(v.at("id"), k, utilities::stringToAge(v.at("age")), "");
+                brainrot->setID(fmt::format("{}-{}", v.at("id"), k));
+                brainrotMenu->addChild(brainrot);
+            }
+            break;
+        }
+        case 1: {
+            auto brainrots = SaveManager::get()->getAllCollectedBrainrots();
+            if (brainrots.empty()) break;
+            auto brainrotID = Mod::get()->getSavedValue<std::string>("equipped-brainrot");
+            if (!brainrots.contains(brainrotID)) break;
+            auto brainrot = Brainrot::create(brainrots[brainrotID].at("id"), brainrotID, utilities::stringToAge(SaveManager::get()->getCollectedBrainrot(brainrotID).at("age")), "");
+            brainrot->setID(fmt::format("{}", brainrotID));
+            brainrotMenu->addChild(brainrot);
+            break;
+        }
+        default: break; // anything after 1 will just be invisible!
+    }
+    OverlayManager::get()->addChild(brainrotMenu);
+}

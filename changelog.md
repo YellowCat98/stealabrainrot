@@ -1,3 +1,7 @@
+# 1.0.1
+- Fixed a bug where the game doesn't inform you of returning brainrots for 2.2091 if you already got the popup in 2.2081.
+- Wandering brainrots no longer disappear after reloading textures.
+
 # 1.0.0
 - 2.2091 Support.
 - Non-TikTokUser brainrots that have not been fed between October 16th 2026 and November 24th 2026 return.
