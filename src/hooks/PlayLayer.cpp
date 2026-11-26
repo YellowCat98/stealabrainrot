@@ -180,6 +180,8 @@ class $modify(InsertBrainrot, PlayLayer) {
 
         SaveManager::get()->getCollectedBrainrots();
         SaveManager::get()->getCurrentSave();
+
+        bool hadNone = SaveManager::get()->collectedUncommitted.empty();
         for (const auto [k, v] : m_fields->m_collected) {
             auto tokens = SaveManager::get()->getAllTokens();
             std::string token;
@@ -228,7 +230,7 @@ class $modify(InsertBrainrot, PlayLayer) {
             SaveManager::get()->removeChange(fmt::to_string(m_level->m_levelID.value()), k);
         }
 
-        if (SaveManager::get()->collectedUncommitted.size() == 1) {
+        if (SaveManager::get()->collectedUncommitted.size() == 1 && hadNone) {
             auto alert = FLAlertLayer::create("First brainrot!",
                 "You have earned your first brainrot!\n"
                 "It has been auto equipped and the stars earned from this level fed to it.",
